@@ -1,0 +1,5 @@
+; $Id$
+name = fetchit
+description = "A Drupal 6 module to link to external databases and *fetch* data from tables and views.  fetchit allows various kinds of displays of the remote data to be selected, including static tables (HTML and GViz), forms for appending a new record, forms for editing data in a grid, and viewing a filtered GViz table.  Parameters to push out to tables in the remote database for filtering displayed data can also be specified."
+core = 6.x
+package = Leonard Rice Engineers Custom Drupal Modules
