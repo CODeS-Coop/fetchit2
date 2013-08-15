@@ -976,8 +976,7 @@ function fetchit_set_existing_selection_nid (&$db_handle,&$db_type,$nid,$val) {
  * define the html table form
  * (with optional radio and checkbox column to make it a selection form)
  */
-//function fetchit_table_html_form_builder(&$form_state,$form_id,$args) {
-function fetchit_table_html_form_builder($form_state,$form_id,$args) {
+function fetchit_table_html_form_builder(&$form_state,$form_id,$args) {
 	/*
 	 * redefine the arguments from the args array
 	 * (&$form_state, $nid, $type) 
@@ -1024,7 +1023,7 @@ function fetchit_table_html_form_builder($form_state,$form_id,$args) {
 		drupal_set_message("An error occurred when accessing the database type. Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
-	if ($db_handle = fetchit_get_db_handle(&$err,$nid)) {
+	if ($db_handle = fetchit_get_db_handle($err,$nid)) {
 		$form['db_handle'] = array('#type' => 'value','#value' => $db_handle);
 	} else {
 		if ($err) drupal_set_message("An error occurred when creating the database connection. Error number $err :".getFetchitErrorMsg($err));
@@ -1276,7 +1275,7 @@ function theme_fetchit_table_html_form_builder($form) {
 	$output .= drupal_render($form);
 	return $output;
 }
-function fetchit_table_html_validate($form, $form_state) {
+function fetchit_table_html_validate($form, &$form_state) {
 	$nid = $form['nid']['#value'];
 	$record_select = fetchit_get_cck_val(F_DR_RECORD_SELECT_TBL,F_DR_RECORD_SELECT_FLD,F_DR_NID_FLD,$nid);
 	switch ($record_select) {
@@ -1337,7 +1336,7 @@ function fetchit_table_html_validate($form, $form_state) {
 	}
 	*/
 }
-function fetchit_table_html_submit($form, $form_state) {
+function fetchit_table_html_submit($form, &$form_state) {
 	$nid = $form['nid']['#value'];
 	$record_select = fetchit_get_cck_val(F_DR_RECORD_SELECT_TBL,F_DR_RECORD_SELECT_FLD,F_DR_NID_FLD,$nid);
 	//$record_select_table = trim(fetchit_get_cck_val(F_DR_RECORD_SELECT_TABLE_TBL,F_DR_RECORD_SELECT_TABLE_FLD,F_DR_NID_FLD,$nid));
@@ -1436,8 +1435,7 @@ function fetchit_table_html_submit($form, $form_state) {
 /*
  * define the table edit form
  */
-//function fetchit_table_edit_form_builder(&$form_state,$form_id,$args) {
-function fetchit_table_edit_form_builder($form_state,$form_id,$args) {
+function fetchit_table_edit_form_builder(&$form_state,$form_id,$args) {
 	/*
 	 * redefine the arguments from the args array
 	 * (&$form_state, $nid, $type) 
@@ -1484,7 +1482,7 @@ function fetchit_table_edit_form_builder($form_state,$form_id,$args) {
 		drupal_set_message("An error occurred when accessing the database type. Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
-	if ($db_handle = fetchit_get_db_handle(&$err,$nid)) {
+	if ($db_handle = fetchit_get_db_handle($err,$nid)) {
 		$form['db_handle'] = array('#type' => 'value','#value' => $db_handle);
 	} else {
 		if ($err) drupal_set_message("An error occurred when creating the database connection. Error number $err :".getFetchitErrorMsg($err));
@@ -1697,7 +1695,7 @@ function theme_fetchit_table_edit_form_builder($form) {
 	$output .= drupal_render($form);
 	return $output;
 }
-function fetchit_table_edit_validate($form, $form_state) {
+function fetchit_table_edit_validate($form, &$form_state) {
 	$nid = $form['nid']['#value'];
 	$user_uid_field = trim(fetchit_get_cck_val(F_DR_CONTENT_UID_TBL,F_DR_CONTENT_UID_FLD,F_DR_NID_FLD,$nid));
 	$field_count = $form['field_count']['#value'];
@@ -1711,7 +1709,7 @@ function fetchit_table_edit_validate($form, $form_state) {
 		return;
 	}
 }
-function fetchit_table_edit_submit($form, $form_state) {
+function fetchit_table_edit_submit($form, &$form_state) {
 	$nid = $form['nid']['#value'];
 	$user_uid_field = trim(fetchit_get_cck_val(F_DR_CONTENT_UID_TBL,F_DR_CONTENT_UID_FLD,F_DR_NID_FLD,$nid));
 	$uid_field_ndx = $form['uid_field_ndx']['#value'];
@@ -1799,7 +1797,7 @@ function fetchit_table_edit_submit($form, $form_state) {
 		$form_state['redirect'] = $redirect; 
 	}
 }
-function fetchit_append_record_form_builder($form_state,$form_id,$args) {
+function fetchit_append_record_form_builder(&$form_state,$form_id,$args) {
 	/*
 	 * redefine the arguments from the args array
 	 * (&$form_state, $nid, $type) 
@@ -1846,7 +1844,7 @@ function fetchit_append_record_form_builder($form_state,$form_id,$args) {
 		drupal_set_message("An error occurred when accessing the database type. Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
-	if ($db_handle = fetchit_get_db_handle(&$err,$nid)) {
+	if ($db_handle = fetchit_get_db_handle($err,$nid)) {
 		$form['db_handle'] = array('#type' => 'value','#value' => $db_handle);
 	} else {
 		if ($err) drupal_set_message("An error occurred when creating the database connection. Error number $err :".getFetchitErrorMsg($err));
@@ -2038,7 +2036,7 @@ function theme_fetchit_append_record_form_builder($form) {
 	$output .= drupal_render($form);
 	return $output;
 }
-function fetchit_append_record_validate($form, $form_state) {
+function fetchit_append_record_validate($form, &$form_state) {
 	$nid = $form['nid']['#value'];
 	$user_uid_field = trim(fetchit_get_cck_val(F_DR_CONTENT_UID_TBL,F_DR_CONTENT_UID_FLD,F_DR_NID_FLD,$nid));
 	$field_count = $form['field_count']['#value'];
@@ -2047,7 +2045,7 @@ function fetchit_append_record_validate($form, $form_state) {
 		return;
 	}
 }
-function fetchit_append_record_submit($form, $form_state) {
+function fetchit_append_record_submit($form, &$form_state) {
 	$nid = $form['nid']['#value'];
 	$user_uid_field = trim(fetchit_get_cck_val(F_DR_CONTENT_UID_TBL,F_DR_CONTENT_UID_FLD,F_DR_NID_FLD,$nid));
 	$uid_field_ndx = $form['uid_field_ndx']['#value'];
@@ -2116,7 +2114,7 @@ function fetchit_append_record_submit($form, $form_state) {
 	}
 }
 
-function fetchit_parameter_form_builder($form_state,$form_id,$args) {
+function fetchit_parameter_form_builder(&$form_state,$form_id,$args) {
 	/*
 	 * redefine the arguments from the args array
 	 * (&$form_state, $nid, $type) 
@@ -2163,7 +2161,7 @@ function fetchit_parameter_form_builder($form_state,$form_id,$args) {
 	/*
 	 * database handle
 	 */
-	if ($db_handle = fetchit_get_db_handle(&$err,$nid)) {
+	if ($db_handle = fetchit_get_db_handle($err,$nid)) {
 		$form['db_handle'] = array('#type' => 'value','#value' => $db_handle);
 	} else {
 		if ($err) drupal_set_message("An error occurred when creating the database connection. Error number $err :".getFetchitErrorMsg($err));
@@ -2373,9 +2371,9 @@ function theme_fetchit_parameter_form_builder($form) {
 	$output .= drupal_render($form);
 	return $output;
 }
-function fetchit_parameter_validate($form, $form_state) {
+function fetchit_parameter_validate($form, &$form_state) {
 }
-function fetchit_parameter_submit($form, $form_state) {
+function fetchit_parameter_submit($form, &$form_state) {
 	$nid = $form['nid']['#value'];
 	$db_type = $form['db_type']['#value'];
 	$db_handle = $form['db_handle']['#value'];
@@ -2604,7 +2602,7 @@ function show_pgobject_info($result) {
 		dpm("Field $i : PrtLen : ".pg_field_prtlen($result,$i));
 	}
 }
-function pg_object_to_append_record_form_builder($form_state,$form_id,$args) {
+function pg_object_to_append_record_form_builder(&$form_state,$form_id,$args) {
 	return;
 }
 function fetchit_get_db_object(&$err,&$db_handle,&$db_query,&$nid) {
@@ -3466,7 +3464,7 @@ function fetchit_booleantointeger($val) {
 	}
 }
 //function fetchit_get_field_element (&$form_state,$element_name,$field_name,$field_type,$db_handle,$user_field_ndx,$user_field_data,$nid,$showtitles,$db_value,$element_controltype_name) {
-function fetchit_get_field_element ($form_state,$element_name,$field_name,$field_type,$db_handle,$user_field_ndx,$user_field_data,$nid,$showtitles,$db_value) {
+function fetchit_get_field_element (&$form_state,$element_name,$field_name,$field_type,$db_handle,$user_field_ndx,$user_field_data,$nid,$showtitles,$db_value) {
 	//$form[$element_name] = fetchit_get_field_element_array($field_name,$field_type,$db_handle,$user_field_ndx,$user_field_data,$nid,$showtitles,$db_value,$element_controltype_name);
 	$form[$element_name] = fetchit_get_field_element_array($field_name,$field_type,$db_handle,$user_field_ndx,$user_field_data,$nid,$showtitles,$db_value);
 	return $form; 
@@ -3945,7 +3943,7 @@ function fetchit_get_field_element_array ($field_name,$field_type,$db_handle,$us
  * this is the generic append new record form builder, used by form hooks
  * convert a db object into a append new record form
  */
-function fetchit_append_record_form_builderXXX($form_state,$form_id,$args) {
+function fetchit_append_record_form_builderXXX(&$form_state,$form_id,$args) {
 	/*
 	 * redefine the arguments from the args array
 	 * (&$form_state, $nid, $type)
@@ -3984,7 +3982,7 @@ function fetchit_append_record_form_builderXXX($form_state,$form_id,$args) {
 	 * will be calling it multiple times because of how pg works
 	 * (field type calls require the connection to stay open)
 	 */
-	if (!$db_handle = fetchit_get_db_handle(&$err,$nid)) {
+	if (!$db_handle = fetchit_get_db_handle($err,$nid)) {
 		if ($err) drupal_set_message("An error occurred when creating the database connection. Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	} 
@@ -4159,13 +4157,13 @@ function fetchit_make_element_controltype_name($node_id,$row,$column) {
  * validate the append record form
  * check entered data - happens after submit
  */
-function fetchit_append_record_form_validateXXX($form, $form_state) {
+function fetchit_append_record_form_validateXXX($form, &$form_state) {
 }
 /* 
  * submit the append record form
  * actions you want to happen after submit and passed validation
  */
-function fetchit_append_record_form_submitXXX($form, $form_state) {
+function fetchit_append_record_form_submitXXX($form, &$form_state) {
   /*
    * do two things
    * 1. append the new record to the table
@@ -4631,7 +4629,7 @@ function fetchit_gviz_form($nid) {
 /*
  * define the gviz form
  */
-function fetchit_gviz_form_builder($form_state,$form_id,$args) {
+function fetchit_gviz_form_builder(&$form_state,$form_id,$args) {
   /*
    * redefine the arguments from the args array
    * (&$form_state, $nid, $type) 
@@ -4703,7 +4701,7 @@ function fetchit_ol_form($nid) {
 /*
  * define the gviz form
  */
-function fetchit_ol_form_builder($form_state,$form_id,$args) {
+function fetchit_ol_form_builder(&$form_state,$form_id,$args) {
   /*
    * redefine the arguments from the args array
    * (&$form_state, $nid, $type) 
@@ -5183,7 +5181,7 @@ function fetchit_gviz_ol_form($nid) {
   return drupal_get_form('fetchit_gviz_ol_form_'.$nid,
                          $packages, $url, $qry, $nid, $gviz_type, $gviz_param, $labels, $data_formatters, $div_params);
 }
-function fetchit_gviz_ol_form_builder($form_state,$form_id,$args) {
+function fetchit_gviz_ol_form_builder(&$form_state,$form_id,$args) {
   /*
    * redefine the arguments from the args array
    * (&$form_state, $nid, $type) 
