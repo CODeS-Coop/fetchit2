@@ -54,12 +54,21 @@ function fetchit_menu() {
 	/*
 	 * create the main fetchit menu item
 	 */
-	$items[$settings['root_menu_name']] = array(
-		'title' => $settings['root_menu_title'],
-		'page callback' => 'fetchit_main_page',
-		'access arguments' => array('access fetchit pages'),
-		'type' => MENU_NORMAL_ITEM,
-	);
+	if (strlen($settings['root_menu_title'])) {
+		$items[$settings['root_menu_name']] = array(
+			'title' => $settings['root_menu_title'],
+			'page callback' => 'fetchit_main_page',
+			'access arguments' => array('access fetchit pages'),
+			'type' => MENU_NORMAL_ITEM,
+		);
+	} else {
+		$items['error'] = array(
+				'title' => 'error',
+				'page callback' => 'fetchit_main_page',
+				'access arguments' => array('access fetchit pages'),
+				'type' => MENU_NORMAL_ITEM,
+		);
+	}
 	/*
 	 * create the menu items for every "displayable" fetchit item
 	 * 
