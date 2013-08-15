@@ -1,12 +1,11 @@
 <?php
-ini_set(‘error_reporting’, E_ALL);
 // $Id$
 /*
  * @file
  * fetchit module
  * creates menu items and pages that contain the output of external db connections in various formats
  *
- * a custom drupal 6.x module created at Leonard Rice Engineers
+ * a custom drupal 7.x module
  */
 /*
  * fetchit constants
@@ -69,7 +68,8 @@ function fetchit_menu() {
 	 * and also reset the fetchit page content table and then rebuild it 
 	 */
 	$mytable = F_DR_PAGE_CONTENT_TBL;
-	$results1=db_query('DELETE FROM {%s}',$mytable);
+	// $results1=db_query('DELETE FROM {%s}',$mytable);
+	$results1=db_query('DELETE FROM {:table}',array(':table' => $mytable));
 	/*
 	 * loop through the list of fetchit content types
 	 * each record of content type "fetchit_content_types" maps to one type of content (think class)
@@ -85,7 +85,8 @@ function fetchit_menu() {
 	$mytable = F_DR_TYPES_TBL;
 	$mygroupby = F_DR_TYPES_FLD;
 	$f_dr_types_fld = F_DR_TYPES_FLD;
-	$results1 = db_query('SELECT %s FROM {%s} GROUP BY %s',$myfield,$mytable,$mygroupby);
+	// $results1 = db_query('SELECT %s FROM {%s} GROUP BY %s',$myfield,$mytable,$mygroupby);
+	$results1 = db_query('SELECT :field FROM {:table} GROUP BY :groupby',array(':field' => $myfield,':table' => $mytable,':groupby' => $mygroupby));
 	$page_counter = 0;
 	while ($row1 = db_fetch_object($results1)) {
 		if ($row1->enabled) {
@@ -180,7 +181,8 @@ function getFetchitSettings() {
 	$settings = array();
 	$myfield="*";
 	$mytable="content_type_fetchit_settings";
-	$results=db_query('SELECT %s FROM {%s}',$myfield,$mytable);
+	// $results=db_query('SELECT %s FROM {%s}',$myfield,$mytable);
+	$results = db_query('SELECT :field FROM {:table}',array(':field' => $myfield,':table' => $mytable));
 	$counter = 0;
 	while ($row = db_fetch_object($results)) {
 		++$counter;
