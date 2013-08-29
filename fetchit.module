@@ -220,7 +220,7 @@ function getFetchitSettings() {
 	$d7returnfieldname = 'nid';
 	$query = db_select($d7tablename, 'n')
 	->condition($d7conditionfieldname, $d7conditionvalue)
-	->fields('n', $d7returnfieldname);
+	->fields('n', array($d7returnfieldname));
 	$result = $query->execute();
 	$mynid = 0;
 	$counter = 0;
