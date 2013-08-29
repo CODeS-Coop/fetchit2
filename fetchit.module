@@ -211,6 +211,9 @@ function getFetchitSettings() {
 	 */
 	drupal_set_message(t('in settings'),'Warning');
 	$settings = array();
+	$settings['root_menu_name'] = null;
+	$settings['root_menu_title'] = null;
+	$settings['data_records_max'] = null;
 	/*
 	 * use the d7 schema query builder API
 	 *   hopefully this will survive the d7 to d8 transition!
