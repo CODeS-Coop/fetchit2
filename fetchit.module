@@ -209,6 +209,7 @@ function getFetchitSettings() {
 	 * if there are more than one (should not be), take the highest numbered one
 	 * get the values from the tables for this nid
 	 */
+	drupal_set_message(t('in settings'),'Warning');
 	$settings = array();
 	/*
 	 * use the d7 schema query builder API
@@ -230,6 +231,7 @@ function getFetchitSettings() {
 		}
 		++$counter;
 	}
+	drupal_set_message(t('Counter = ').$counter,'Warning');
 	/*
 	if ($mynid) {
 		$d7tablename = 'field_data_field_fetchit2_root_menu_name';
