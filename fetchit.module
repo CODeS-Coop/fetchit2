@@ -209,7 +209,7 @@ function getFetchitSettings() {
 	 * if there are more than one (should not be), take the highest numbered one
 	 * get the values from the tables for this nid
 	 */
-	drupal_set_message(t('in settings'),'Warning');
+	// drupal_set_message(t('in settings'),'Warning');
 	$settings = array();
 	$settings['root_menu_name'] = null;
 	$settings['root_menu_title'] = null;
@@ -234,47 +234,46 @@ function getFetchitSettings() {
 		}
 		++$counter;
 	}
-	drupal_set_message(t('Counter = ').$counter,'Warning');
-	/*
+	// drupal_set_message(t('Counter = ').$counter,'Warning');
 	if ($mynid) {
 		$d7tablename = 'field_data_field_fetchit2_root_menu_name';
-		$query = db_select($d7tablename, 'n');
-		$d7conditionfieldname = 'bundle';
-		$d7conditionvalue = 'fetchit2_settings';
-		$query->condition($d7conditionfieldname, $d7conditionvalue);
-		$d7conditionfieldname = 'entity_id';
-		$d7conditionvalue = $mynid;
-		$query->condition($d7conditionfieldname, $d7conditionvalue);
+		$d7condition1fieldname = 'bundle';
+		$d7condition1value = 'fetchit2_settings';
+		$d7condition2fieldname = 'entity_id';
+		$d7condition2value = $mynid;
 		$d7returnfieldname = 'field_fetchit2_root_menu_name_value';
-		$query->fields('n', $d7returnfieldname)
+		$query = db_select($d7tablename, 'n')
+		->condition($d7condition1fieldname, $d7condition1value)
+		->condition($d7condition2fieldname, $d7condition2value)
+		->fields('n', array($d7returnfieldname));
 		$result = $query->execute();
 		foreach ($result as $row) {
 			$settings['root_menu_name'] = $row->$d7returnfieldname;
 		}
 		$d7tablename = 'field_data_field_fetchit2_root_menu_title';
-		$query = db_select($d7tablename, 'n');
-		$d7conditionfieldname = 'bundle';
-		$d7conditionvalue = 'fetchit2_settings';
-		$query->condition($d7conditionfieldname, $d7conditionvalue);
-		$d7conditionfieldname = 'entity_id';
-		$d7conditionvalue = $mynid;
-		$query->condition($d7conditionfieldname, $d7conditionvalue);
+		$d7condition1fieldname = 'bundle';
+		$d7condition1value = 'fetchit2_settings';
+		$d7condition2fieldname = 'entity_id';
+		$d7condition2value = $mynid;
 		$d7returnfieldname = 'field_fetchit2_root_menu_title_value';
-		$query->fields('n', $d7returnfieldname)
+		$query = db_select($d7tablename, 'n')
+		->condition($d7condition1fieldname, $d7condition1value)
+		->condition($d7condition2fieldname, $d7condition2value)
+		->fields('n', array($d7returnfieldname));
 		$result = $query->execute();
 		foreach ($result as $row) {
 			$settings['root_menu_title'] = $row->$d7returnfieldname;
 		}
 		$d7tablename = 'field_data_field_fetchit2_data_records_max';
-		$query = db_select($d7tablename, 'n');
-		$d7conditionfieldname = 'bundle';
-		$d7conditionvalue = 'fetchit2_settings';
-		$query->condition($d7conditionfieldname, $d7conditionvalue);
-		$d7conditionfieldname = 'entity_id';
-		$d7conditionvalue = $mynid;
-		$query->condition($d7conditionfieldname, $d7conditionvalue);
+		$d7condition1fieldname = 'bundle';
+		$d7condition1value = 'fetchit2_settings';
+		$d7condition2fieldname = 'entity_id';
+		$d7condition2value = $mynid;
 		$d7returnfieldname = 'field_fetchit2_data_records_max_value';
-		$query->fields('n', $d7returnfieldname)
+		$query = db_select($d7tablename, 'n')
+		->condition($d7condition1fieldname, $d7condition1value)
+		->condition($d7condition2fieldname, $d7condition2value)
+		->fields('n', $d7returnfieldname);
 		$result = $query->execute();
 		foreach ($result as $row) {
 			$settings['data_records_max'] = $row->$d7returnfieldname;
