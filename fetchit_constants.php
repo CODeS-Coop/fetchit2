@@ -181,7 +181,7 @@ define("F_DR_DATA_TBL_NDX_FLD","stored");
 define("F_DR_DATA_TBL_UID_FLD","drupal_userid");
 define("F_DR_FORM_ELE_DEF","default");
 define("F_DR_FORM_ERROR_DEF","<br><b>Error: Form could not be created.</b><br>");
-define("F_DR_NID_FLD","nid");
+//define("F_DR_NID_FLD","nid");
 define("F_DR_DBTYPE_MYSQL","MySQL");
 define("F_DR_DBTYPE_PGSQL","PostgreSQL");
 define("F_DR_DBTYPE_MSSQL","SQLServer");
