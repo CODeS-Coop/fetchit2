@@ -250,6 +250,7 @@ function getFetchitSettings() {
 		foreach ($result as $row) {
 			$settings['root_menu_name'] = $row->$d7returnfieldname;
 		}
+		/*
 		$d7tablename = 'field_data_field_fetchit2_root_menu_title';
 		$d7condition1fieldname = 'bundle';
 		$d7condition1value = 'fetchit2_settings';
@@ -278,6 +279,7 @@ function getFetchitSettings() {
 		foreach ($result as $row) {
 			$settings['data_records_max'] = $row->$d7returnfieldname;
 		}
+		*/
 	}
 	*/
 	if (is_null($settings['root_menu_name']) or !strlen(trim($settings['root_menu_name']))) $settings['root_menu_name'] = 'fetchit_menu';
