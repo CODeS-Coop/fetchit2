@@ -251,6 +251,7 @@ function getFetchitSettings() {
 		foreach ($result as $row) {
 			$settings[F2_D7_SETTINGS_MNAME] = $row->$d7returnfieldname;
 		}
+		drupal_set_message(t('name = ').$settings[F2_D7_SETTINGS_MNAME],'Warning');
 		
 		$d7tablename = 'field_data_field_fetchit2_root_menu_title';
 		$d7condition1fieldname = 'bundle';
@@ -266,6 +267,8 @@ function getFetchitSettings() {
 		foreach ($result as $row) {
 			$settings['root_menu_title'] = $row->$d7returnfieldname;
 		}
+		drupal_set_message(t('title = ').$settings['root_menu_title'],'Warning');
+
 		$d7tablename = 'field_data_field_fetchit2_data_records_max';
 		$d7condition1fieldname = 'bundle';
 		$d7condition1value = 'fetchit2_settings';
@@ -280,6 +283,7 @@ function getFetchitSettings() {
 		foreach ($result as $row) {
 			$settings['data_records_max'] = $row->$d7returnfieldname;
 		}
+		drupal_set_message(t('max = ').$settings['data_records_max'],'Warning');
 	}
 	if (is_null($settings['root_menu_name']) or !strlen(trim($settings['root_menu_name']))) $settings['root_menu_name'] = 'fetchit_menu';
 	if (is_null($settings['root_menu_title']) or !strlen(trim($settings['root_menu_title']))) $settings['root_menu_title'] = 'fetchit';
