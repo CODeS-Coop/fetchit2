@@ -78,11 +78,22 @@ function fetchit_menu() {
 	 */
 	$mytable = F_DR_PAGE_CONTENT_TBL;
 	drupal_set_message(t('mytable = ').$mytable,'Warning');
-	// $results1=db_query('DELETE FROM {%s}',$mytable);
-	$results1=db_query('DELETE FROM {:table}',array(':table' => $mytable));
-	drupal_set_message(t('results = ').$results1,'Warning');
+
+	$query = db_select($mytable, 'n')
+	->fields('n');
+	$result = $query->execute();
+	$counter = 0;
+	foreach ($result as $row) {
+		++$counter;
+	}
+	drupal_set_message(t('counter = ').$counter,'Warning');
+	
 	// for debugging only
 	return $items;
+	
+	// $results1=db_query('DELETE FROM {%s}',$mytable);
+	//$results1=db_query('DELETE FROM {:table}',array(':table' => $mytable));
+	//drupal_set_message(t('results = ').$results1,'Warning');
 	/*
 	 * loop through the list of fetchit content types
 	 * each record of content type "fetchit_content_types" maps to one type of content (think class)
