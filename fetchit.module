@@ -218,10 +218,10 @@ function getFetchitSettings() {
 	 * use the d7 schema query builder API
 	 *   hopefully this will survive the d7 to d8 transition!
 	 */
-	$d7tablename = 'node';
-	$d7conditionfieldname = 'type';
-	$d7conditionvalue = 'fetchit2_settings';
-	$d7returnfieldname = 'nid';
+	$d7tablename = F2_D7_NODE_TBLNAME;
+	$d7conditionfieldname = F2_D7_NODE_TYPE_FLDNAME;
+	$d7conditionvalue = F2_D7_SETTINGS_CTYPE_NAME;
+	$d7returnfieldname = F2_D7_NODE_NID_FLDNAME;
 	$query = db_select($d7tablename, 'n')
 	->condition($d7conditionfieldname, $d7conditionvalue)
 	->fields('n', array($d7returnfieldname));
@@ -234,8 +234,8 @@ function getFetchitSettings() {
 		}
 		++$counter;
 	}
-	drupal_set_message(t('Counter = ').$counter,'Warning');
-	drupal_set_message(t('mynid = ').$mynid,'Warning');
+	//drupal_set_message(t('Counter = ').$counter,'Warning');
+	//drupal_set_message(t('mynid = ').$mynid,'Warning');
 	if ($mynid) {
 		$d7tablename = 'field_data_field_fetchit2_root_menu_name';
 		$d7condition1fieldname = 'bundle';
