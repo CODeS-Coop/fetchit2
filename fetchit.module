@@ -88,7 +88,7 @@ function fetchit_menu() {
 	}
 	drupal_set_message(t('counter = ').$counter,'Warning');
 	
-	$result2 = db_query('DELETE FROM {fetchit_page_content}');
+	$result2 = db_query('DELETE FROM {:xxx}',array(':xxx','fetchit_page_content'));
 	
 	$result = $query->execute();
 	$counter = 0;
