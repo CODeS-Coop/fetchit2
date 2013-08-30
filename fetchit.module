@@ -107,10 +107,10 @@ function fetchit_menu() {
 	$d7conditionfieldname = F2_D7_NODE_TYPE_FLDNAME; // 'type'
 	$d7conditionvalue = F2_D7_CTYPES_CTYPE_NAME; // 'fetchit2_content_types'
 	$d7returnfieldname = F2_D7_NODE_NID_FLDNAME; // 'nid'
-	$query = db_select($d7tablename, 'n')
+	$query1 = db_select($d7tablename, 'n')
 	->condition($d7conditionfieldname, $d7conditionvalue)
 	->fields('n', array($d7returnfieldname));
-	$result1 = $query->execute();
+	$result1 = $query1->execute();
 	/*
 	 * now loop through each of these,
 	 * get the field record values,
@@ -118,33 +118,39 @@ function fetchit_menu() {
 	 */
 	$fetchit_contenttypes_enabled = array();
 	$fetchit_contenttypes_nid = array();
-	$mynid = 0;
+	$typenid = 0;
 	$counter = 0;
 	$query2 = null;
 	$query3 = null;
 	// loop through the fetchit content type records from the node table
-	foreach ($result as $row) {
-		// get the nid
-		$mynid = $row->$d7returnfieldname;
+	foreach ($result1 as $row) {
+		// get the nid of the fetchit content type content type record
+		$typenid = $row->$d7returnfieldname;
+		drupal_set_message(t('the nid of the fetchit content type node subtype = ').$typenid,'Warning');
 		/*
 		 * get the fetchit content type content type index value for this nid
+		 * this index value is a key into a table of possible fetchit content types
 		 */
 		$d7tablename = F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPES_CTYPE_INDEX; //'field_data_field_fetchit2_content_type';
 		$d7condition1fieldname = F2_D7_FIELD_SUBTYPE_FLDNAME; //'bundle';
 		$d7condition1value = F2_D7_CTYPES_CTYPE_NAME; //'fetchit2_content_types';
 		$d7condition2fieldname = F2_D7_FIELD_TYPEID_FLDNAME; //'entity_id';
-		$d7condition2value = $mynid;
+		$d7condition2value = $typenid;
 		$d7returnfieldname = F2_D7_CTYPES_CTYPE_INDEX.F2_D7_FIELD_VAL_SUFFIX; //'field_fetchit2_content_type_value';
 		$query2 = db_select($d7tablename, 'n')
 		->condition($d7condition1fieldname, $d7condition1value)
 		->condition($d7condition2fieldname, $d7condition2value)
 		->fields('n', array($d7returnfieldname));
-		$result = $query2->execute();
-		// just in case there are multiple - there should not be
-		foreach ($result as $row) {
-			$fetchit_contenttype_index = $row->$d7returnfieldname
+		$result2 = $query2->execute();
+		/*
+		 * just in case there are multiple records in the field table for this nid
+		 * loop over them (no order) and take the last one
+		 * but this should really never happen
+		 */
+		foreach ($result2 as $row) {
+			$fetchit_contenttype_index = $row->$d7returnfieldname;
 		}
-		//drupal_set_message(t('name = ').$settings[F2_D7_SETTINGS_MNAME],'Warning');
+		drupal_set_message(t('the type index of the fetchit content type node subtype = ').$fetchit_contenttype_index,'Warning');
 		/*
 		 * get the fetchit content type content type enabled value
 		 */
@@ -152,58 +158,82 @@ function fetchit_menu() {
 		$d7condition1fieldname = F2_D7_FIELD_SUBTYPE_FLDNAME; //'bundle';
 		$d7condition1value = F2_D7_CTYPES_CTYPE_NAME; //'fetchit2_content_types';
 		$d7condition2fieldname = F2_D7_FIELD_TYPEID_FLDNAME; //'entity_id';
-		$d7condition2value = $mynid;
+		$d7condition2value = $typenid;
 		$d7returnfieldname = F2_D7_CTYPES_CTYPE_ENABL.F2_D7_FIELD_VAL_SUFFIX; //'field_fetchit2_type_enabled_value';
 		$query3 = db_select($d7tablename, 'n')
 		->condition($d7condition1fieldname, $d7condition1value)
 		->condition($d7condition2fieldname, $d7condition2value)
 		->fields('n', array($d7returnfieldname));
-		$result = $query3->execute();
-		// just in case there are multiple - there should not be
-		foreach ($result as $row) {
+		$result3 = $query3->execute();
+		/*
+		 * just in case there are multiple records in the field table for this nid
+		 * loop over them (no order) and take the last one
+		 * but this should really never happen
+		 */
+		foreach ($result3 as $row) {
 			$fetchit_contenttype_enabled = $row->$d7returnfieldname
 		}
-		//drupal_set_message(t('name = ').$settings[F2_D7_SETTINGS_MNAME],'Warning');
+		drupal_set_message(t('the enabled value of the fetchit content type node subtype = ').$fetchit_contenttype_enabled,'Warning');
 		/*
 		 * now save the enabled value and the nid value in hash tables
-		 * overwriting if we found one of these already - should not happen, but be safe
+		 * overwriting if we found one of these already and the new nid is higher
+		 * but this should really never happen
 		 */
-		$fetchit_contenttypes_enabled[$fetchit_contenttype_index] = $fetchit_contenttype_enabled;
-		$fetchit_contenttypes_nid[$fetchit_contenttype_index] = $mynid;
+		if ( is_null($fetchit_contenttypes_nid[$fetchit_contenttype_index]) ) {
+			$fetchit_contenttypes_nid[$fetchit_contenttype_index] = $typenid;
+			$fetchit_contenttypes_enabled[$fetchit_contenttype_index] = $fetchit_contenttype_enabled;
+		} else {
+			if ($typenid > $fetchit_contenttypes_nid[$fetchit_contenttype_index]) {
+				$fetchit_contenttypes_nid[$fetchit_contenttype_index] = $typenid;
+				$fetchit_contenttypes_enabled[$fetchit_contenttype_index] = $fetchit_contenttype_enabled;
+			}
+		}
 		++$counter;
 	}
+	drupal_set_message(t('number of fetchit content type node subtype records = ').$counter,'Warning');
 	/*
-	 * now loop through the fetchit content type content types hash tables
-	 * read the tables of content instances of each type already created and
+	 * the hash tables should now have ONE entry for each fetchit content type
+	 * 
+	 * loop through them and find all the instances of each one in the
+	 * custom content bundle field instances for each type
 	 * then create the menu items and page content table records if they are page enabled
 	 */
 	$page_counter = 0;
 	foreach ($fetchit_contenttypes_enabled as $fcti=>$enabled) {
+		$query4 = null;
 		if ($enabled) {
-			// now get all the data for drupal custom content of this type
-			// first have to convert this index into the bundle field instance name where it is stored
-			// then look for this name as a node subtype, get the node id (nid)
-			// then get the subtype values, see if it is enabled for page content,
-			// and if it is then finally create the page content table record and the drupal menu item
-			getFetchitTypeBundleName($fcti)
-			// create the new record
-			
-			$mytable = F_DR_PAGE_CONTENT_TBL;
-			$ndx = db_insert($mytable)
-				->fields(array(
-						'page_index' => $page_counter,
-						'fetchit2_page_type' => $fcti,
-						
-						)
-					)
-				->execute();
-			
-			$num_deleted = db_delete($mytable)->execute();
-			
-			++$page_counter;
+			/*
+			 * now get all the data for drupal custom content of this type
+			 * first have to convert this index into the bundle field instance name where it is stored
+			 * then look for this name as a node subtype, get the node id (nid)
+			 * then get the subtype values, see if it is enabled for page content,
+			 * and if it is then finally create the page content table record and the drupal menu item
+			 */
+			$d7tablename = F2_D7_NODE_TBLNAME; // 'node'
+			$d7conditionfieldname = F2_D7_NODE_TYPE_FLDNAME; // 'type'
+			$d7conditionvalue = getFetchitTypeBundleName($fcti); // 'fetchit2_html_tables', etc.
+			$d7returnfieldname = F2_D7_NODE_NID_FLDNAME; // 'nid'
+			$query4 = db_select($d7tablename, 'n')
+			->condition($d7conditionfieldname, $d7conditionvalue)
+			->fields('n', array($d7returnfieldname));
+			$result4 = $query4->execute();
+			/*
+			 * these are the node subtype instances for this fetchit content type
+			 * loop through them one at a time and see if they are page enabled
+			 */
+			foreach ($result4 as $row) {
+				// get the nid of this instance of a fetchit content type
+				$instancenid = $row->$d7returnfieldname;
+				drupal_set_message(t('nid of instance ').$page_counter.t(' of fetchit type ').$fcti.'('.$d7conditionvalue.') = ').$instancenid,'Warning');
+				drupal_set_message(t('bundle name = ').getFetchitTypeBundleName($fcti),'Warning');
+				++$page_counter;
+			}
 		}
 	}
-	
+	return $items;
+	/*
+	 * old code
+	 *
 	$myfield = F_DR_TYPES_FLD.", max(".F_DR_TYPES_FLD_ENABLED.") as enabled";
 	$mytable = F_DR_TYPES_TBL;
 	$mygroupby = F_DR_TYPES_FLD;
@@ -239,6 +269,7 @@ function fetchit_menu() {
 			}
 		}
 	}
+	*/
 	/*
 	 * create the menu items for the db operation and json callback functions
 	 * 
