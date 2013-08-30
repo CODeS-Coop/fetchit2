@@ -282,7 +282,6 @@ function getFetchitSettings() {
 		}
 		*/
 	}
-	*/
 	if (is_null($settings['root_menu_name']) or !strlen(trim($settings['root_menu_name']))) $settings['root_menu_name'] = 'fetchit_menu';
 	if (is_null($settings['root_menu_title']) or !strlen(trim($settings['root_menu_title']))) $settings['root_menu_title'] = 'fetchit';
 	if (is_null($settings['data_records_max']) or $settings['data_records_max']<1) $settings['data_records_max'] = 20;
