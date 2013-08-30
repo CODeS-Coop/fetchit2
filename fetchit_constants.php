@@ -25,30 +25,6 @@ define("F2_D7_HTMLTBLS_CTYPE_NAME","fetchit2_html_tables");  // type 0
    define("F2_D7_CTYPES_CTYPE_INDEX","field_fetchit2_content_type");
    define("F2_D7_CTYPES_CTYPE_ENABL","field_fetchit2_type_enabled");
 
-// F2_D7_HTMLTBLS_CTYPE_NAME (fetchit2_html_tables) types field names (CTYPEFIELDNAME)
-// define("F2_D7_HTMLTBLS_CTYPE_NAME",  "fetchit2_html_tables");
-   define("F2_D7_HTMLTBLS_CTYPE_ENABLE","field_fetchit2_content_enabled");
-   define("F2_D7_HTMLTBLS_CTYPE_DBHOST","field_fetch_it_db_host");
-   define("F2_D7_HTMLTBLS_CTYPE_DBTYPE","field_fetch_it_db_type");
-   define("F2_D7_HTMLTBLS_CTYPE_DBPORT","field_fetch_it_db_port");
-   define("F2_D7_HTMLTBLS_CTYPE_DBNAME","field_fetch_it_db_name");
-   define("F2_D7_HTMLTBLS_CTYPE_DBUSER","field_fetch_it_db_login");
-   define("F2_D7_HTMLTBLS_CTYPE_DBPW","field_fetch_it_db_password");
-   define("F2_D7_HTMLTBLS_CTYPE_VIEWNM","field_fetch_it_view_name");
-   define("F2_D7_HTMLTBLS_CTYPE_UIDFLD","field_fetchit2_user_uid_field");
-   define("F2_D7_HTMLTBLS_CTYPE_KEYFLD","field_fetchit2_key_field");
-   define("F2_D7_HTMLTBLS_CTYPE_RECSEL","field_fetchit2_record_select");
-   define("F2_D7_HTMLTBLS_CTYPE_RECTBL","field_fetchit2_record_select_tbl");
-   define("F2_D7_HTMLTBLS_CTYPE_SUBLBL","field_fetchit2_submit_label");
-   define("F2_D7_HTMLTBLS_CTYPE_POSTFN","field_fetchit2_post_function");
-   define("F2_D7_HTMLTBLS_CTYPE_REDIR","field_fetchit2_redirect");
-   define("F2_D7_HTMLTBLS_CTYPE_VALID","field_fetchit2_validate");
-   define("F2_D7_HTMLTBLS_CTYPE_SUBMIT","field_fetchit2_submit");
-   define("F2_D7_HTMLTBLS_CTYPE_CTITLE","field_fetchit2_content_title");
-   define("F2_D7_HTMLTBLS_CTYPE_CDESC","field_fetchit2_content_desc");
-   define("F2_D7_HTMLTBLS_CTYPE_ABOVE","field_fetchit2_custom_above");
-   define("F2_D7_HTMLTBLS_CTYPE_BELOW","field_fetchit2_custom_below");
-
 // Drupal 7 core custom content (fields) naming conventions
 define("F2_D7_FIELD_TBL_PREFIX","field_data_");
 // define("F2_D7_FIELD_TBLNAME",F2_D7_FIELD_TBL_PREFIX.CTYPEFIELDNAME);
@@ -56,6 +32,34 @@ define("F2_D7_FIELD_VAL_SUFFIX","_value");
 define("F2_D7_FIELD_TYPE_FLDNAME","entity_type");
 define("F2_D7_FIELD_SUBTYPE_FLDNAME","bundle");
 define("F2_D7_FIELD_TYPEID_FLDNAME","entity_id");
+
+// common fields for all fetchit ctypes
+   define("F2_D7_CTYPE_ENABLE","field_fetchit2_content_enabled");
+   define("F2_D7_CTYPE_ENABLE_TBL",F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPE_ENABLE);
+   define("F2_D7_CTYPE_ENABLE_FLD",F2_D7_CTYPE_ENABLE.F2_D7_FIELD_VAL_SUFFIX);
+   define("F2_D7_CTYPE_DBHOST","field_fetch_it_db_host");
+   define("F2_D7_CTYPE_DBHOST_TBL",F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPE_DBHOST);
+   define("F2_D7_CTYPE_DBHOST_FLD",F2_D7_CTYPE_DBHOST.F2_D7_FIELD_VAL_SUFFIX);
+   define("F2_D7_CTYPE_DBTYPE","field_fetch_it_db_type");
+   define("F2_D7_CTYPE_DBPORT","field_fetch_it_db_port");
+   define("F2_D7_CTYPE_DBNAME","field_fetch_it_db_name");
+   define("F2_D7_CTYPE_DBUSER","field_fetch_it_db_login");
+   define("F2_D7_CTYPE_DBPW","field_fetch_it_db_password");
+   define("F2_D7_CTYPE_VIEWNM","field_fetch_it_view_name");
+   define("F2_D7_CTYPE_UIDFLD","field_fetchit2_user_uid_field");
+   define("F2_D7_CTYPE_KEYFLD","field_fetchit2_key_field");
+   define("F2_D7_CTYPE_RECSEL","field_fetchit2_record_select");
+   define("F2_D7_CTYPE_RECTBL","field_fetchit2_record_select_tbl");
+   define("F2_D7_CTYPE_SUBLBL","field_fetchit2_submit_label");
+   define("F2_D7_CTYPE_POSTFN","field_fetchit2_post_function");
+   define("F2_D7_CTYPE_REDIR","field_fetchit2_redirect");
+   define("F2_D7_CTYPE_VALID","field_fetchit2_validate");
+   define("F2_D7_CTYPE_SUBMIT","field_fetchit2_submit");
+   define("F2_D7_CTYPE_CTITLE","field_fetchit2_content_title");
+   define("F2_D7_CTYPE_CDESC","field_fetchit2_content_desc");
+   define("F2_D7_CTYPE_ABOVE","field_fetchit2_custom_above");
+   define("F2_D7_CTYPE_BELOW","field_fetchit2_custom_below");
+
 // define("F2_D7_FIELD_VALUE_FLDNAME",CTYPEFIELDNAME.F2_D7_FIELD_VAL_SUFFIX);
 
 define("F_DR_NID_FLD","nid");

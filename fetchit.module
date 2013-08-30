@@ -226,10 +226,26 @@ function fetchit_menu() {
 			 * loop through them one at a time and see if they are page enabled
 			 */
 			foreach ($result4 as $row) {
+				$query5 = null;
 				// get the nid of this instance of a fetchit content type
 				$instancenid = $row->$d7returnfieldname;
 				drupal_set_message(t('nid of instance ').$page_counter.t(' of fetchit type ').$fcti.'('.$d7conditionvalue.') = '.$instancenid,'Warning');
 				drupal_set_message(t('bundle name = ').getFetchitTypeBundleName($fcti),'Warning');
+				// get the content type instance enabled value (same field used in all types)
+				$d7tablename = F2_D7_CTYPE_ENABLE_TBL; // 'field_data_field_fetchit2_content_enabled';
+				$d7condition1fieldname = F2_D7_FIELD_SUBTYPE_FLDNAME; //'bundle';
+				$d7condition1value = $d7conditionvalue; //e.g. 'fetchit2_html_tables';
+				$d7condition2fieldname = F2_D7_FIELD_TYPEID_FLDNAME; //'entity_id';
+				$d7condition2value = $instancenid;
+				$d7returnfieldname = F2_D7_CTYPE_ENABLE_FLD; //'field_fetchit2_content_enabled_value';
+				$query5 = db_select($d7tablename, 'n')
+				->condition($d7condition1fieldname, $d7condition1value)
+				->condition($d7condition2fieldname, $d7condition2value)
+				->fields('n', array($d7returnfieldname));
+				$result5 = $query5->execute();
+				
+				drupal_set_message(t('instance enabled value = ').$result5->$d7returnfieldname,'Warning');
+				
 				++$page_counter;
 			}
 		}
