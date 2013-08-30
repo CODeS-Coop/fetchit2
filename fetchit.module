@@ -69,8 +69,6 @@ function fetchit_menu() {
 				'type' => MENU_NORMAL_ITEM,
 		);
 	}
-	// for debugging only
-	return $items;
 	/*
 	 * create the menu items for every "displayable" fetchit item
 	 * 
@@ -81,6 +79,8 @@ function fetchit_menu() {
 	$mytable = F_DR_PAGE_CONTENT_TBL;
 	// $results1=db_query('DELETE FROM {%s}',$mytable);
 	$results1=db_query('DELETE FROM {:table}',array(':table' => $mytable));
+	// for debugging only
+	return $items;
 	/*
 	 * loop through the list of fetchit content types
 	 * each record of content type "fetchit_content_types" maps to one type of content (think class)
