@@ -285,9 +285,9 @@ function getFetchitSettings() {
 		}
 		//drupal_set_message(t('max = ').$settings['data_records_max'],'Warning');
 	}
-	if (is_null($settings['root_menu_name']) or !strlen(trim($settings['root_menu_name']))) $settings['root_menu_name'] = 'fetchit_menu';
-	if (is_null($settings['root_menu_title']) or !strlen(trim($settings['root_menu_title']))) $settings['root_menu_title'] = 'fetchit';
-	if (is_null($settings['data_records_max']) or $settings['data_records_max']<1) $settings['data_records_max'] = 20;
+	if (is_null($settings[F2_D7_SETTINGS_MNAME]) or !strlen(trim($settings[F2_D7_SETTINGS_MNAME]))) $settings[F2_D7_SETTINGS_MNAME] = F2_D7_SETTINGS_MNAME_DEF;
+	if (is_null($settings[F2_D7_SETTINGS_MTITL]) or !strlen(trim($settings[F2_D7_SETTINGS_MTITL]))) $settings[F2_D7_SETTINGS_MTITL] = F2_D7_SETTINGS_MTITL_DEF;
+	if (is_null($settings[F2_D7_SETTINGS_DRCMX]) or $settings[F2_D7_SETTINGS_DRCMX]<1) $settings[F2_D7_SETTINGS_DRCMX] = F2_D7_SETTINGS_DRCMX_DEF;
 	switch ($counter) {
 		case 0: //warn the user - need to add a settings record
 			drupal_set_message(t('<i>Warning, the fetchit settings record is missing.  Please create a new fetchit settings record.  Currently using default fetchit settings.</i>'),'Warning');

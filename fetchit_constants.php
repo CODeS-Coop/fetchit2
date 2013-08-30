@@ -11,8 +11,11 @@ define("F2_D7_HTMLTBLS_CTYPE_NAME","fetchit2_html_tables");
 // F2_D7_SETTINGS_CTYPE_NAME (fetchit2_settings) field names (CTYPEFIELDNAME)
 // define("F2_D7_SETTINGS_CTYPE_NAME", "fetchit2_settings");
    define("F2_D7_SETTINGS_MNAME","root_menu_name");
+   define("F2_D7_SETTINGS_MNAME_DEF","fetchit_menu");
    define("F2_D7_SETTINGS_MTITL","root_menu_title");
+   define("F2_D7_SETTINGS_MTITL_DEF","fetchit");
    define("F2_D7_SETTINGS_DRCMX","data_records_max");
+   define("F2_D7_SETTINGS_DRCMX_DEF",20);
    define("F2_D7_SETTINGS_CTYPE_MNAME","field_fetchit2_root_menu_name");
    define("F2_D7_SETTINGS_CTYPE_MTITL","field_fetchit2_root_menu_title");
    define("F2_D7_SETTINGS_CTYPE_DRCMX","field_fetchit2_data_records_max");
