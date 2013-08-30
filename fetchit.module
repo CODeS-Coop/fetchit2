@@ -171,7 +171,7 @@ function fetchit_menu() {
 		 * but this should really never happen
 		 */
 		foreach ($result3 as $row) {
-			$fetchit_contenttype_enabled = $row->$d7returnfieldname
+			$fetchit_contenttype_enabled = $row->$d7returnfieldname;
 		}
 		drupal_set_message(t('the enabled value of the fetchit content type node subtype = ').$fetchit_contenttype_enabled,'Warning');
 		/*
