@@ -77,11 +77,12 @@ function fetchit_menu() {
 	 * and also reset the fetchit page content table and then rebuild it 
 	 */
 	$mytable = F_DR_PAGE_CONTENT_TBL;
-	// $results1=db_query('DELETE FROM {%s}',$mytable);
-	$results1=db_query('DELETE FROM {:table}',array(':table' => $mytable));
-	drupal_set_message(t('results = ').$results1,'Warning');
+	drupal_set_message(t('mytable = ').$mytable,'Warning');
 	// for debugging only
 	return $items;
+	// $results1=db_query('DELETE FROM {%s}',$mytable);
+	//$results1=db_query('DELETE FROM {:table}',array(':table' => $mytable));
+	//drupal_set_message(t('results = ').$results1,'Warning');
 	/*
 	 * loop through the list of fetchit content types
 	 * each record of content type "fetchit_content_types" maps to one type of content (think class)
