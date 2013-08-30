@@ -252,7 +252,7 @@ function getFetchitSettings() {
 			$settings[F2_D7_SETTINGS_MNAME] = $row->$d7returnfieldname;
 		}
 		
-		$d7tablename = F2_D7_FIELD_TBL_PREFIX.'field_data_field_fetchit2_root_menu_title';
+		$d7tablename = 'field_data_field_fetchit2_root_menu_title';
 		$d7condition1fieldname = 'bundle';
 		$d7condition1value = 'fetchit2_settings';
 		$d7condition2fieldname = 'entity_id';
