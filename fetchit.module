@@ -224,7 +224,7 @@ function fetchit_menu() {
 			foreach ($result4 as $row) {
 				// get the nid of this instance of a fetchit content type
 				$instancenid = $row->$d7returnfieldname;
-				drupal_set_message(t('nid of instance ').$page_counter.t(' of fetchit type ').$fcti.'('.$d7conditionvalue.') = ').$instancenid,'Warning');
+				drupal_set_message(t('nid of instance ').$page_counter.t(' of fetchit type ').$fcti.'('.$d7conditionvalue.') = '.$instancenid,'Warning');
 				drupal_set_message(t('bundle name = ').getFetchitTypeBundleName($fcti),'Warning');
 				++$page_counter;
 			}
