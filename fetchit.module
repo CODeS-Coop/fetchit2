@@ -234,8 +234,10 @@ function getFetchitSettings() {
 		}
 		++$counter;
 	}
-	// drupal_set_message(t('Counter = ').$counter,'Warning');
+	drupal_set_message(t('Counter = ').$counter,'Warning');
+	drupal_set_message(t('mynid = ').$mynid,'Warning');
 	if ($mynid) {
+		/*
 		$d7tablename = 'field_data_field_fetchit2_root_menu_name';
 		$d7condition1fieldname = 'bundle';
 		$d7condition1value = 'fetchit2_settings';
@@ -250,7 +252,6 @@ function getFetchitSettings() {
 		foreach ($result as $row) {
 			$settings['root_menu_name'] = $row->$d7returnfieldname;
 		}
-		/*
 		$d7tablename = 'field_data_field_fetchit2_root_menu_title';
 		$d7condition1fieldname = 'bundle';
 		$d7condition1value = 'fetchit2_settings';
