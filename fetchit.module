@@ -258,10 +258,10 @@ function getFetchitSettings() {
 		//$d7condition2value = $mynid;
 		//->condition($d7condition2fieldname, $d7condition2value)
 		$d7returnfieldname = 'field_fetchit2_root_menu_title_value';
-		$query = db_select($d7tablename, 'n')
+		$query3 = db_select($d7tablename, 'n')
 		->condition($d7condition1fieldname, $d7condition1value)
 		->fields('n', array($d7returnfieldname));
-		$result = $query->execute();
+		$result = $query3->execute();
 		foreach ($result as $row) {
 			$settings['root_menu_title'] = $row->$d7returnfieldname;
 		}
