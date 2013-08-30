@@ -225,10 +225,10 @@ function fetchit_menu() {
 			 * these are the node subtype instances for this fetchit content type
 			 * loop through them one at a time and see if they are page enabled
 			 */
-			foreach ($result4 as $row) {
+			foreach ($result4 as $row4) {
 				$query5 = null;
 				// get the nid of this instance of a fetchit content type
-				$instancenid = $row->$d7returnfieldname;
+				$instancenid = $row4->$d7returnfieldname;
 				drupal_set_message(t('nid of instance ').$page_counter.t(' of fetchit type ').$fcti.'('.$d7conditionvalue.') = '.$instancenid,'Warning');
 				drupal_set_message(t('bundle name = ').getFetchitTypeBundleName($fcti),'Warning');
 				// get the content type instance enabled value (same field used in all types)
@@ -243,8 +243,10 @@ function fetchit_menu() {
 				->condition($d7condition2fieldname, $d7condition2value)
 				->fields('n', array($d7returnfieldname));
 				$result5 = $query5->execute();
-				
-				drupal_set_message(t('instance enabled value = ').$result5->$d7returnfieldname,'Warning');
+				foreach ($result5 as $row5) {
+					$instanceenabled = $row5->$d7returnfieldname;
+				}
+				drupal_set_message(t('instance enabled value = ').$instanceenabled,'Warning');
 				
 				++$page_counter;
 			}
