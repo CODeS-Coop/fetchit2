@@ -88,6 +88,15 @@ function fetchit_menu() {
 	}
 	drupal_set_message(t('counter = ').$counter,'Warning');
 	
+	$result2 = db_query('DELETE FROM {fetchit_page_content}');
+	
+	$result = $query->execute();
+	$counter = 0;
+	foreach ($result as $row) {
+		++$counter;
+	}
+	drupal_set_message(t('counter = ').$counter,'Warning');
+
 	// for debugging only
 	return $items;
 	
