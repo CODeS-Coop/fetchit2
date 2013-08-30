@@ -79,6 +79,7 @@ function fetchit_menu() {
 	$mytable = F_DR_PAGE_CONTENT_TBL;
 	// $results1=db_query('DELETE FROM {%s}',$mytable);
 	$results1=db_query('DELETE FROM {:table}',array(':table' => $mytable));
+	drupal_set_message(t('results = ').$results1,'Warning');
 	// for debugging only
 	return $items;
 	/*
