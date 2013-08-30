@@ -251,21 +251,21 @@ function getFetchitSettings() {
 		foreach ($result as $row) {
 			$settings['root_menu_name'] = $row->$d7returnfieldname;
 		}
-		/*
 		$d7tablename = 'field_data_field_fetchit2_root_menu_title';
 		$d7condition1fieldname = 'bundle';
 		$d7condition1value = 'fetchit2_settings';
-		$d7condition2fieldname = 'entity_id';
-		$d7condition2value = $mynid;
+		//$d7condition2fieldname = 'entity_id';
+		//$d7condition2value = $mynid;
+		//->condition($d7condition2fieldname, $d7condition2value)
 		$d7returnfieldname = 'field_fetchit2_root_menu_title_value';
 		$query = db_select($d7tablename, 'n')
 		->condition($d7condition1fieldname, $d7condition1value)
-		->condition($d7condition2fieldname, $d7condition2value)
 		->fields('n', array($d7returnfieldname));
 		$result = $query->execute();
 		foreach ($result as $row) {
 			$settings['root_menu_title'] = $row->$d7returnfieldname;
 		}
+		/*
 		$d7tablename = 'field_data_field_fetchit2_data_records_max';
 		$d7condition1fieldname = 'bundle';
 		$d7condition1value = 'fetchit2_settings';
