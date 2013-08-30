@@ -6,7 +6,7 @@ define("F2_D7_NODE_TYPE_FLDNAME","type");
 // CTYPENAMEs (field instance bundle names)
 define("F2_D7_SETTINGS_CTYPE_NAME","fetchit2_settings");
 define("F2_D7_CTYPES_CTYPE_NAME","fetchit2_content_types");
-define("F2_D7_HTMLTBLS_CTYPE_NAME","fetchit2_html_tables");
+define("F2_D7_HTMLTBLS_CTYPE_NAME","fetchit2_html_tables");  // type 0
 
 // F2_D7_SETTINGS_CTYPE_NAME (fetchit2_settings) field names (CTYPEFIELDNAME)
 // define("F2_D7_SETTINGS_CTYPE_NAME", "fetchit2_settings");

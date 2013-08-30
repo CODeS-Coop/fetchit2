@@ -72,31 +72,138 @@ function fetchit_menu() {
 	/*
 	 * create the menu items for every "displayable" fetchit item
 	 * 
-	 * get the fetchit content records (nodes) for each content type
+	 * get the fetchit content records (nodes) for each fetchit content type
 	 * and if they are marked as page content, then create menu items for them
-	 * and also reset the fetchit page content table and then rebuild it 
+	 * and empty the fetchit page content table and then rebuild it
+	 * 
+	 * note: this needs to be moved out of the main module. no need to do this every page refresh!
+	 * 
+	 * empty the fetchit page content table
 	 */
 	$mytable = F_DR_PAGE_CONTENT_TBL;
 	$num_deleted = db_delete($mytable)->execute();
-	drupal_set_message(t('$num_deleted = ').$num_deleted,'Warning');
-
-	// for debugging only
-	return $items;
-	
-	// $results1=db_query('DELETE FROM {%s}',$mytable);
-	//$results1=db_query('DELETE FROM {:table}',array(':table' => $mytable));
-	//drupal_set_message(t('results = ').$results1,'Warning');
+	//drupal_set_message(t('$num_deleted = ').$num_deleted,'Warning');
 	/*
 	 * loop through the list of fetchit content types
 	 * each record of content type "fetchit_content_types" maps to one type of content (think class)
 	 * there should be AT MOST one record of CCK type "fetchit_content_types" for each fetchit content type
-	 *   (more than one record could cause problems...i'll use a group by query to try and prevent these problems though)
+	 *   (more than one record could cause problems...just use the highest value node id in case there are multiple)
+	 *   
+	 * in d7 there are not records but separate tables for each field in the bundle field instance
+	 * fetchit content types are subtypes of nodes in d7
+	 * so the process is similar to the settings function
+	 *   1. get the node indices (nid values) from the node table of the fetchit types
+	 *   2. get the highest value the nids
+	 *   3. find this nid in each of the field tables and return the field values
+	 *   4. then create the menu items and records in the page content table if they are enabled
 	 * 
-	 * note: these records map 1 to 1 to other cck types that stand for
-	 *   each TYPE of fetchit content
+	 * note: these records map 1 to 1 to other cck types that stand for each TYPE of fetchit content
 	 *   there can be as many records (instantiations) of these content types as desired,
 	 *   where each record is a specific realization of that type (think of content type instances)
+	 *   
+	 *   first get all the nodes that are fetchit content type content types (yeah, that is actually right)
 	 */
+	$d7tablename = F2_D7_NODE_TBLNAME; // 'node'
+	$d7conditionfieldname = F2_D7_NODE_TYPE_FLDNAME; // 'type'
+	$d7conditionvalue = F2_D7_CTYPES_CTYPE_NAME; // 'fetchit2_content_types'
+	$d7returnfieldname = F2_D7_NODE_NID_FLDNAME; // 'nid'
+	$query = db_select($d7tablename, 'n')
+	->condition($d7conditionfieldname, $d7conditionvalue)
+	->fields('n', array($d7returnfieldname));
+	$result1 = $query->execute();
+	/*
+	 * now loop through each of these,
+	 * get the field record values,
+	 * and update the arrays
+	 */
+	$fetchit_contenttypes_enabled = array();
+	$fetchit_contenttypes_nid = array();
+	$mynid = 0;
+	$counter = 0;
+	$query2 = null;
+	$query3 = null;
+	// loop through the fetchit content type records from the node table
+	foreach ($result as $row) {
+		// get the nid
+		$mynid = $row->$d7returnfieldname;
+		/*
+		 * get the fetchit content type content type index value for this nid
+		 */
+		$d7tablename = F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPES_CTYPE_INDEX; //'field_data_field_fetchit2_content_type';
+		$d7condition1fieldname = F2_D7_FIELD_SUBTYPE_FLDNAME; //'bundle';
+		$d7condition1value = F2_D7_CTYPES_CTYPE_NAME; //'fetchit2_content_types';
+		$d7condition2fieldname = F2_D7_FIELD_TYPEID_FLDNAME; //'entity_id';
+		$d7condition2value = $mynid;
+		$d7returnfieldname = F2_D7_CTYPES_CTYPE_INDEX.F2_D7_FIELD_VAL_SUFFIX; //'field_fetchit2_content_type_value';
+		$query2 = db_select($d7tablename, 'n')
+		->condition($d7condition1fieldname, $d7condition1value)
+		->condition($d7condition2fieldname, $d7condition2value)
+		->fields('n', array($d7returnfieldname));
+		$result = $query2->execute();
+		// just in case there are multiple - there should not be
+		foreach ($result as $row) {
+			$fetchit_contenttype_index = $row->$d7returnfieldname
+		}
+		//drupal_set_message(t('name = ').$settings[F2_D7_SETTINGS_MNAME],'Warning');
+		/*
+		 * get the fetchit content type content type enabled value
+		 */
+		$d7tablename = F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPES_CTYPE_ENABL; //'field_data_field_fetchit2_type_enabled';
+		$d7condition1fieldname = F2_D7_FIELD_SUBTYPE_FLDNAME; //'bundle';
+		$d7condition1value = F2_D7_CTYPES_CTYPE_NAME; //'fetchit2_content_types';
+		$d7condition2fieldname = F2_D7_FIELD_TYPEID_FLDNAME; //'entity_id';
+		$d7condition2value = $mynid;
+		$d7returnfieldname = F2_D7_CTYPES_CTYPE_ENABL.F2_D7_FIELD_VAL_SUFFIX; //'field_fetchit2_type_enabled_value';
+		$query3 = db_select($d7tablename, 'n')
+		->condition($d7condition1fieldname, $d7condition1value)
+		->condition($d7condition2fieldname, $d7condition2value)
+		->fields('n', array($d7returnfieldname));
+		$result = $query3->execute();
+		// just in case there are multiple - there should not be
+		foreach ($result as $row) {
+			$fetchit_contenttype_enabled = $row->$d7returnfieldname
+		}
+		//drupal_set_message(t('name = ').$settings[F2_D7_SETTINGS_MNAME],'Warning');
+		/*
+		 * now save the enabled value and the nid value in hash tables
+		 * overwriting if we found one of these already - should not happen, but be safe
+		 */
+		$fetchit_contenttypes_enabled[$fetchit_contenttype_index] = $fetchit_contenttype_enabled;
+		$fetchit_contenttypes_nid[$fetchit_contenttype_index] = $mynid;
+		++$counter;
+	}
+	/*
+	 * now loop through the fetchit content type content types hash tables
+	 * read the tables of content instances of each type already created and
+	 * then create the menu items and page content table records if they are page enabled
+	 */
+	$page_counter = 0;
+	foreach ($fetchit_contenttypes_enabled as $fcti=>$enabled) {
+		if ($enabled) {
+			// now get all the data for drupal custom content of this type
+			// first have to convert this index into the bundle field instance name where it is stored
+			// then look for this name as a node subtype, get the node id (nid)
+			// then get the subtype values, see if it is enabled for page content,
+			// and if it is then finally create the page content table record and the drupal menu item
+			getFetchitTypeBundleName($fcti)
+			// create the new record
+			
+			$mytable = F_DR_PAGE_CONTENT_TBL;
+			$ndx = db_insert($mytable)
+				->fields(array(
+						'page_index' => $page_counter,
+						'fetchit2_page_type' => $fcti,
+						
+						)
+					)
+				->execute();
+			
+			$num_deleted = db_delete($mytable)->execute();
+			
+			++$page_counter;
+		}
+	}
+	
 	$myfield = F_DR_TYPES_FLD.", max(".F_DR_TYPES_FLD_ENABLED.") as enabled";
 	$mytable = F_DR_TYPES_TBL;
 	$mygroupby = F_DR_TYPES_FLD;
@@ -190,6 +297,37 @@ function getFetchitTypeTableName($type) {
 			return;
 	}
 }
+/*
+ * convert a type index into a d7 core fields module bundle field instance name
+ */
+function getFetchitTypeBundleName($type) {
+	switch ($type) {
+		case 0:
+			return F2_D7_HTMLTBLS_CTYPE_NAME;
+		case 1:
+			return F_DR_TYPE_1_TBL;
+		case 2:
+			return F_DR_TYPE_2_TBL;
+		case 3:
+			return F_DR_TYPE_3_TBL;
+		case 4:
+			return F_DR_TYPE_4_TBL;
+		case 5:
+			return F_DR_TYPE_5_TBL;
+		case 6:
+			return F_DR_TYPE_6_TBL;
+		case 7:
+			return F_DR_TYPE_7_TBL;
+		case 8:
+			return F_DR_TYPE_8_TBL;
+		case 9:
+			return F_DR_TYPE_9_TBL;
+		case 10:
+			return F_DR_TYPE_10_TBL;
+		default:
+			return;
+	}
+}
 function getFetchitSettings() {
 	/*
 	 * get the fetchit settings
@@ -216,17 +354,17 @@ function getFetchitSettings() {
 	 */
 	// drupal_set_message(t('in settings'),'Warning');
 	$settings = array();
-	$settings[F2_D7_SETTINGS_MNAME] = null; //'root_menu_name'
+	$settings[F2_D7_SETTINGS_MNAME] = null; //['root_menu_name'] = null;
 	$settings[F2_D7_SETTINGS_MTITL] = null; //['root_menu_title'] = null;
 	$settings[F2_D7_SETTINGS_DRCMX] = null; //['data_records_max'] = null;
 	/*
 	 * use the d7 schema query builder API
 	 *   hopefully this will survive the d7 to d8 transition!
 	 */
-	$d7tablename = F2_D7_NODE_TBLNAME;
-	$d7conditionfieldname = F2_D7_NODE_TYPE_FLDNAME;
-	$d7conditionvalue = F2_D7_SETTINGS_CTYPE_NAME;
-	$d7returnfieldname = F2_D7_NODE_NID_FLDNAME;
+	$d7tablename = F2_D7_NODE_TBLNAME; // 'node'
+	$d7conditionfieldname = F2_D7_NODE_TYPE_FLDNAME; // 'type'
+	$d7conditionvalue = F2_D7_SETTINGS_CTYPE_NAME; // 'fetchit2_settings'
+	$d7returnfieldname = F2_D7_NODE_NID_FLDNAME; // 'nid'
 	$query = db_select($d7tablename, 'n')
 	->condition($d7conditionfieldname, $d7conditionvalue)
 	->fields('n', array($d7returnfieldname));
