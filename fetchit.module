@@ -247,8 +247,11 @@ function fetchit_menu() {
 					$instanceenabled = $row5->$d7returnfieldname;
 				}
 				drupal_set_message(t('instance enabled value = ').$instanceenabled,'Warning');
-				
-				++$page_counter;
+				if ($instanceenabled == 1) { // it is page content
+					//insert record into page content table
+					//create menu item
+					++$page_counter;
+				}
 			}
 		}
 	}
