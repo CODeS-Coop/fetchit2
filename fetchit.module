@@ -118,6 +118,10 @@ function fetchit_menu() {
 	 */
 	$fetchit_contenttypes_enabled = array();
 	$fetchit_contenttypes_nid = array();
+	for ($i=0;$i<20;++$i) {
+		$fetchit_contenttypes_nid[$i] = null;
+		$fetchit_contenttypes_enabled[$i] = null;
+	}
 	$typenid = 0;
 	$counter = 0;
 	$query2 = null;
