@@ -77,25 +77,8 @@ function fetchit_menu() {
 	 * and also reset the fetchit page content table and then rebuild it 
 	 */
 	$mytable = F_DR_PAGE_CONTENT_TBL;
-	drupal_set_message(t('mytable = ').$mytable,'Warning');
-
-	$query = db_select($mytable, 'n')
-	->fields('n');
-	$result = $query->execute();
-	$counter = 0;
-	foreach ($result as $row) {
-		++$counter;
-	}
-	drupal_set_message(t('counter = ').$counter,'Warning');
-	
-	$result2 = db_query('DELETE FROM {:xxx}',array(':xxx','fetchit_page_content'));
-	
-	$result = $query->execute();
-	$counter = 0;
-	foreach ($result as $row) {
-		++$counter;
-	}
-	drupal_set_message(t('counter = ').$counter,'Warning');
+	$num_deleted = db_delete($mytable)->execute();
+	drupal_set_message(t('$num_deleted = ').$num_deleted,'Warning');
 
 	// for debugging only
 	return $items;
