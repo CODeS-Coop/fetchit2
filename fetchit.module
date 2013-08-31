@@ -701,19 +701,35 @@ function fetchit_get_postqry(&$err,$nid) {
  * creates the appropriate content for the content type (html table, etc.) and destination (page, block, etc.)  
  */
 function getFetchitContent($type, $nid, $dest) {
-	$mytable = F_DR_CONTENT_ENABLED_TBL;
-	$myfield = F_DR_CONTENT_ENABLED_FLD;
-	$enabled = fetchit_get_cck_val($mytable,$myfield,F_DR_NID_FLD,$nid);
+	// get the enabled field value
+	$table = F2_D7_CTYPE_ENABLE_TBL; // field_data_field_fetchit2_content_enabled
+	$returnfield = F2_D7_CTYPE_ENABLE_FLD; // field_fetchit2_content_enabled_value
+	$conditionfield = F2_D7_FIELD_TYPEID_FLDNAME; // entity_id
+	$conditionvalue = $nid;
+	$enabled = fetchit_get_cck_val($table,$returnfield,$conditionfield,$conditionvalue);
+	
 	if ($dest == $enabled) {
 		//runFetchitPreQuery($nid);
 		//fetchit_run_prequery($err,$nid);
-		$output = fetchit_get_cck_val(F_DR_NODE_BODY_TBL,F_DR_NODE_BODY_FLD,F_DR_NID_FLD,$nid);
-		$mytable = F_DR_CONTENT_ABOVE_TBL;
-		$myfield = F_DR_CONTENT_ABOVE_FLD;
-		$output .= fetchit_get_cck_val($mytable,$myfield,F_DR_NID_FLD,$nid);
+
+		//get the body field value
+		$table = F2_D7_CTYPE_BODY_TBL; //'field_data_body';
+		$returnfield = F2_D7_CTYPE_BODY_FLD; //'body_value';
+		$conditionfield = F2_D7_FIELD_SUBTYPE_FLDNAME; //'bundle';
+		$conditionvalue = $nid;
+		$output = fetchit_get_cck_val($table,$returnfield,$conditionfield,$conditionvalue);
+		
+		//get the content above field value 
+		$table = F2_D7_CTYPE_ABOVE_TBL; //'field_data_field_fetchit2_custom_above';
+		$returnfield = F2_D7_CTYPE_ABOVE_FLD; //'field_fetchit2_custom_above_value';
+		$conditionfield = F2_D7_FIELD_SUBTYPE_FLDNAME; //'bundle';
+		$conditionvalue = $nid;
+		$output .= fetchit_get_cck_val($table,$returnfield,$conditionfield,$conditionvalue);
+		
 		switch ($type) {
-			case F_DR_TYPE_HTML_TABLE_NDX: //html table  
-				$output .= drupal_get_form('fetchit_table_html_form_'.$nid,$nid);
+			case F_DR_TYPE_HTML_TABLE_NDX: //html table
+				$output .= "blahblahblah a table goes here blahblahblah";
+				//$output .= drupal_get_form('fetchit_table_html_form_'.$nid,$nid);
 				//$output .= drupal_get_form('fetchit_table_html_test_form_builder',$nid);
 				break;
 			case F_DR_TYPE_GVIZ_NDX: //gviz
@@ -735,9 +751,13 @@ function getFetchitContent($type, $nid, $dest) {
 				$output .= "<br><b>Unsupported form type.  Please contact the site developer.</b><br>";
 				break;
 		}
-		$mytable = F_DR_CONTENT_BELOW_TBL;
-		$myfield = F_DR_CONTENT_BELOW_FLD;
-		$output .= fetchit_get_cck_val($mytable,$myfield,F_DR_NID_FLD,$nid);
+
+		//get the content below field value
+		$table = F2_D7_CTYPE_BELOW_TBL; //'field_data_field_fetchit2_custom_above';
+		$returnfield = F2_D7_CTYPE_BELOW_FLD; //'field_fetchit2_custom_above_value';
+		$conditionfield = F2_D7_FIELD_SUBTYPE_FLDNAME; //'bundle';
+		$conditionvalue = $nid;
+		$output .= fetchit_get_cck_val($table,$returnfield,$conditionfield,$conditionvalue);
 	}
 	return $output;
 }

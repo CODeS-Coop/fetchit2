@@ -41,11 +41,16 @@ define("F2_D7_CTYPE_BODY_FLD",F2_D7_CTYPE_BODY.F2_D7_FIELD_VAL_SUFFIX);
 define("F2_D7_CTYPE_ENABLE","field_fetchit2_content_enabled");
 define("F2_D7_CTYPE_ENABLE_TBL",F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPE_ENABLE);
 define("F2_D7_CTYPE_ENABLE_FLD",F2_D7_CTYPE_ENABLE.F2_D7_FIELD_VAL_SUFFIX);
-   define("F2_D7_CTYPE_DBHOST","field_fetch_it_db_host");
-   define("F2_D7_CTYPE_DBHOST_TBL",F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPE_DBHOST);
-   define("F2_D7_CTYPE_DBHOST_FLD",F2_D7_CTYPE_DBHOST.F2_D7_FIELD_VAL_SUFFIX);
-   define("F2_D7_CTYPE_DBTYPE","field_fetch_it_db_type");
-   define("F2_D7_CTYPE_DBPORT","field_fetch_it_db_port");
+define("F2_D7_CTYPE_DBHOST","field_fetch_it_db_host");
+define("F2_D7_CTYPE_DBHOST_TBL",F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPE_DBHOST);
+define("F2_D7_CTYPE_DBHOST_FLD",F2_D7_CTYPE_DBHOST.F2_D7_FIELD_VAL_SUFFIX);
+define("F2_D7_CTYPE_DBTYPE","field_fetch_it_db_type");
+define("F2_D7_CTYPE_DBTYPE_TBL",F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPE_DBTYPE);
+define("F2_D7_CTYPE_DBTYPE_FLD",F2_D7_CTYPE_DBTYPE.F2_D7_FIELD_VAL_SUFFIX);
+define("F2_D7_CTYPE_DBPORT","field_fetch_it_db_port");
+define("F2_D7_CTYPE_DBPORT_TBL",2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPE_DBPORT);
+define("F2_D7_CTYPE_DBPORT_FLD",F2_D7_CTYPE_DBPORT.F2_D7_FIELD_VAL_SUFFIX);
+
    define("F2_D7_CTYPE_DBNAME","field_fetch_it_db_name");
    define("F2_D7_CTYPE_DBUSER","field_fetch_it_db_login");
    define("F2_D7_CTYPE_DBPW","field_fetch_it_db_password");
@@ -61,8 +66,13 @@ define("F2_D7_CTYPE_ENABLE_FLD",F2_D7_CTYPE_ENABLE.F2_D7_FIELD_VAL_SUFFIX);
    define("F2_D7_CTYPE_SUBMIT","field_fetchit2_submit");
    define("F2_D7_CTYPE_CTITLE","field_fetchit2_content_title");
    define("F2_D7_CTYPE_CDESC","field_fetchit2_content_desc");
-   define("F2_D7_CTYPE_ABOVE","field_fetchit2_custom_above");
-   define("F2_D7_CTYPE_BELOW","field_fetchit2_custom_below");
+   
+define("F2_D7_CTYPE_ABOVE","field_fetchit2_custom_above");
+define("F2_D7_CTYPE_ABOVE_TBL",F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPE_ABOVE);
+define("F2_D7_CTYPE_ABOVE_FLD",F2_D7_CTYPE_ABOVE.F2_D7_FIELD_VAL_SUFFIX);
+define("F2_D7_CTYPE_BELOW","field_fetchit2_custom_below");
+define("F2_D7_CTYPE_BELOW_TBL",F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPE_BELOW);
+define("F2_D7_CTYPE_BELOW_FLD",F2_D7_CTYPE_BELOW.F2_D7_FIELD_VAL_SUFFIX);
 
 // define("F2_D7_FIELD_VALUE_FLDNAME",CTYPEFIELDNAME.F2_D7_FIELD_VAL_SUFFIX);
 
