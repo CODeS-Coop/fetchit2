@@ -248,6 +248,10 @@ function fetchit_menu() {
 				}
 				drupal_set_message(t('instance enabled value = ').$instanceenabled,'Warning');
 				if ($instanceenabled == 1) { // it is page content
+					drupal_set_message(t('inserted into table ').$pagecontenttable,'Warning');
+					drupal_set_message(F_DR_PAGE_CONTENT_PAGE_FLD.' '.$page_counter,'Warning');
+					drupal_set_message(F_DR_PAGE_CONTENT_TYPE_FLD.' '.$fcti,'Warning');
+					drupal_set_message(F_DR_PAGE_CONTENT_NID_FLD.' '.$instancenid,'Warning');
 					//insert record into page content table
 					$ndx = db_insert($pagecontenttable)
 					->fields(array(
@@ -256,7 +260,7 @@ function fetchit_menu() {
 							F_DR_PAGE_CONTENT_NID_FLD => $instancenid,))
 					->execute();
 					//create menu item
-					drupal_set_message(t('inserted into table ').$pagecontenttable.t(' returned = ').$ndx,'Warning');
+					drupal_set_message(t('table insert return = ').$ndx,'Warning');
 					++$page_counter;
 				}
 			}
