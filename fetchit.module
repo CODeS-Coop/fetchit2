@@ -80,8 +80,8 @@ function fetchit_menu() {
 	 * 
 	 * empty the fetchit page content table
 	 */
-	$mytable = F_DR_PAGE_CONTENT_TBL;
-	$num_deleted = db_delete($mytable)->execute();
+	$pagecontenttable = F_DR_PAGE_CONTENT_TBL;
+	$num_deleted = db_delete($pagecontenttable)->execute();
 	//drupal_set_message(t('$num_deleted = ').$num_deleted,'Warning');
 	/*
 	 * loop through the list of fetchit content types
@@ -249,7 +249,14 @@ function fetchit_menu() {
 				drupal_set_message(t('instance enabled value = ').$instanceenabled,'Warning');
 				if ($instanceenabled == 1) { // it is page content
 					//insert record into page content table
+					$ndx = db_insert($pagecontenttable)
+					->fields(array(
+							F_DR_PAGE_CONTENT_PAGE_FLD => $page_counter,
+							F_DR_PAGE_CONTENT_TYPE_FLD => $fcti,
+							F_DR_PAGE_CONTENT_NID_FLD => $instancenid))
+					->execute();
 					//create menu item
+					
 					++$page_counter;
 				}
 			}
