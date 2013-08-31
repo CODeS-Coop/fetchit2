@@ -127,9 +127,9 @@ function fetchit_menu() {
 	$query2 = null;
 	$query3 = null;
 	// loop through the fetchit content type records from the node table
-	foreach ($result1 as $row) {
+	foreach ($result1 as $row1) {
 		// get the nid of the fetchit content type content type record
-		$typenid = $row->$d7returnfieldname;
+		$typenid = $row1->$d7returnfieldname;
 		drupal_set_message(t('the nid of the fetchit content type node subtype = ').$typenid,'Warning');
 		/*
 		 * get the fetchit content type content type index value for this nid
@@ -151,8 +151,8 @@ function fetchit_menu() {
 		 * loop over them (no order) and take the last one
 		 * but this should really never happen
 		 */
-		foreach ($result2 as $row) {
-			$fetchit_contenttype_index = $row->$d7returnfieldname;
+		foreach ($result2 as $row2) {
+			$fetchit_contenttype_index = $row2->$d7returnfieldname;
 		}
 		drupal_set_message(t('the type index of the fetchit content type node subtype = ').$fetchit_contenttype_index,'Warning');
 		/*
@@ -174,8 +174,8 @@ function fetchit_menu() {
 		 * loop over them (no order) and take the last one
 		 * but this should really never happen
 		 */
-		foreach ($result3 as $row) {
-			$fetchit_contenttype_enabled = $row->$d7returnfieldname;
+		foreach ($result3 as $row3) {
+			$fetchit_contenttype_enabled = $row3->$d7returnfieldname;
 		}
 		drupal_set_message(t('the enabled value of the fetchit content type node subtype = ').$fetchit_contenttype_enabled,'Warning');
 		/*
@@ -5603,11 +5603,20 @@ function fetchit_get_cck_val($t,$rf,$wf,$wfv) {
 		$trace = debug_backtrace();
 		dpm($trace);
 	}*/
-  $dbo=db_query("SELECT %s FROM {%s} WHERE %s = %d;",$rf,$t,$wf,$wfv);
-  while ($r = db_fetch_object($dbo)) {
-    $result = $r->$rf;
-  }
-  return $result;
+  //$dbo=db_query("SELECT %s FROM {%s} WHERE %s = %d;",$rf,$t,$wf,$wfv);
+  //while ($r = db_fetch_object($dbo)) {
+  //  $result = $r->$rf;
+  //}
+	// rewrite to use drupal 7 database schema query builder API
+	$query = db_select($t, 't')
+		->condition($wf, $wfv)
+		->fields('t', array($rf))
+		->range(0,1);
+	$result = $query->execute();
+	foreach ($result as $row) {
+		$val = $row->$rf;
+	}
+	return $val;
 }
 /*
  * get values from the drupal cck tables using an integer where clause
