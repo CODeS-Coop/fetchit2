@@ -216,10 +216,10 @@ function fetchit_menu() {
 			$d7tablename = F2_D7_NODE_TBLNAME; // 'node'
 			$d7conditionfieldname = F2_D7_NODE_TYPE_FLDNAME; // 'type'
 			$d7conditionvalue = getFetchitTypeBundleName($fcti); // 'fetchit2_html_tables', etc.
-			$d7returnfieldname = F2_D7_NODE_NID_FLDNAME; // 'nid'
+			$d7returnfieldnames = array(F2_D7_NODE_NID_FLDNAME,F2_D7_NODE_TITL_FLDNAME); // ('nid', 'title')
 			$query4 = db_select($d7tablename, 'n')
 			->condition($d7conditionfieldname, $d7conditionvalue)
-			->fields('n', array($d7returnfieldname));
+			->fields('n', $d7returnfieldnames);
 			$result4 = $query4->execute();
 			/*
 			 * these are the node subtype instances for this fetchit content type
@@ -228,8 +228,10 @@ function fetchit_menu() {
 			foreach ($result4 as $row4) {
 				$query5 = null;
 				// get the nid of this instance of a fetchit content type
-				$instancenid = $row4->$d7returnfieldname;
+				$instancenid = $row4->F2_D7_NODE_NID_FLDNAME;
+				$instancetitle = $row4->F2_D7_NODE_TITL_FLDNAME;
 				drupal_set_message(t('nid of instance ').$page_counter.t(' of fetchit type ').$fcti.'('.$d7conditionvalue.') = '.$instancenid,'Warning');
+				drupal_set_message(t('title of instance ').$page_counter.t(' of fetchit type ').$fcti.'('.$d7conditionvalue.') = '.$instancetitle,'Warning');
 				drupal_set_message(t('bundle name = ').getFetchitTypeBundleName($fcti),'Warning');
 				// get the content type instance enabled value (same field used in all types)
 				$d7tablename = F2_D7_CTYPE_ENABLE_TBL; // 'field_data_field_fetchit2_content_enabled';
@@ -261,6 +263,13 @@ function fetchit_menu() {
 					->execute();
 					//create menu item
 					drupal_set_message(t('table insert return = ').$ndx,'Warning');
+					$items[$settings[F2_D7_SETTINGS_MNAME].'/query'.trim($page_counter)] = array(
+							'title' => $instancetitle,
+							'page callback' => 'fetchit_query_page',
+							'page arguments' => array(1),
+							'access arguments' => array('access fetchit pages'),
+							'weight' => $page_counter,
+					);
 					++$page_counter;
 				}
 			}

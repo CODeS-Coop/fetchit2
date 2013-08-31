@@ -2,6 +2,7 @@
 define("F2_D7_NODE_TBLNAME","node");
 define("F2_D7_NODE_NID_FLDNAME","nid");
 define("F2_D7_NODE_TYPE_FLDNAME","type");
+define("F2_D7_NODE_TITL_FLDNAME","title");
 
 // CTYPENAMEs (field instance bundle names)
 define("F2_D7_SETTINGS_CTYPE_NAME","fetchit2_settings");
