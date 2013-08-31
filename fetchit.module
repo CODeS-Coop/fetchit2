@@ -560,7 +560,7 @@ function fetchit_query_page($query) {
 	$this_ndx=(int)substr($query,5);
 	$type = fetchit_get_cck_val(F_DR_PAGE_CONTENT_TBL,F_DR_PAGE_CONTENT_TYPE_FLD,F_DR_PAGE_CONTENT_PAGE_FLD,$this_ndx);
 	$nid = fetchit_get_cck_val(F_DR_PAGE_CONTENT_TBL,F_DR_PAGE_CONTENT_NID_FLD,F_DR_PAGE_CONTENT_PAGE_FLD,$this_ndx);
-	$output = '$this_ndx '.$this_ndx.' $type '.$type.' $nid '.$nid
+	$output = '$this_ndx '.$this_ndx.' $type '.$type.' $nid '.$nid;
 	//$output = getFetchitContent($type,$nid,1);
 	return $output;
 }
