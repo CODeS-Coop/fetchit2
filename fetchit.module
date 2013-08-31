@@ -253,10 +253,10 @@ function fetchit_menu() {
 					->fields(array(
 							F_DR_PAGE_CONTENT_PAGE_FLD => $page_counter,
 							F_DR_PAGE_CONTENT_TYPE_FLD => $fcti,
-							F_DR_PAGE_CONTENT_NID_FLD => $instancenid))
+							F_DR_PAGE_CONTENT_NID_FLD => $instancenid,))
 					->execute();
 					//create menu item
-					
+					drupal_set_message(t('inserted into table ').$pagecontenttable.t(' returned = ').$ndx,'Warning');
 					++$page_counter;
 				}
 			}
