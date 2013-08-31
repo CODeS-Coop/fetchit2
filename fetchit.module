@@ -228,8 +228,10 @@ function fetchit_menu() {
 			foreach ($result4 as $row4) {
 				$query5 = null;
 				// get the nid of this instance of a fetchit content type
-				$instancenid = $row4->F2_D7_NODE_NID_FLDNAME;
-				$instancetitle = $row4->F2_D7_NODE_TITL_FLDNAME;
+				$fieldname = F2_D7_NODE_NID_FLDNAME;
+				$instancenid = $row4->$fieldname;
+				$fieldname = F2_D7_NODE_TITL_FLDNAME;
+				$instancetitle = $row4->$fieldname;
 				drupal_set_message(t('nid of instance ').$page_counter.t(' of fetchit type ').$fcti.'('.$d7conditionvalue.') = '.$instancenid,'Warning');
 				drupal_set_message(t('title of instance ').$page_counter.t(' of fetchit type ').$fcti.'('.$d7conditionvalue.') = '.$instancetitle,'Warning');
 				drupal_set_message(t('bundle name = ').getFetchitTypeBundleName($fcti),'Warning');
