@@ -530,7 +530,7 @@ function fetchit_main_page() {
 	$d7tablename = F2_D7_CTYPE_BODY_TBL; //'field_data_body';	
 	$d7condition1fieldname = F2_D7_FIELD_SUBTYPE_FLDNAME; //'bundle';
 	$d7condition1value = F2_D7_SETTINGS_CTYPE_NAME; //'fetchit2_settings';
-	$d7returnfieldname = F2_D7_CTYPE_BODY_TBL; //'body_value';
+	$d7returnfieldname = F2_D7_CTYPE_BODY_FLD; //'body_value';
 	$query = db_select($d7tablename, 'n')
 	->condition($d7condition1fieldname, $d7condition1value)
 	->fields('n', array($d7returnfieldname));
