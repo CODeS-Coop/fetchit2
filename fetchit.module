@@ -277,7 +277,6 @@ function fetchit_menu() {
 			}
 		}
 	}
-	return $items;
 	/*
 	 * old code
 	 *
@@ -528,19 +527,30 @@ function fetchit_main_page() {
    * note that many of the internal CCK content type field names still contain "fetch_it"
    * since this can not be changed without rebuilding the fields from scratch
    */
-  $fetchit_main_page_body=db_result(db_query('SELECT field_fetch_it_main_page_body_value FROM {content_type_fetchit_settings}'));
-  if (strlen(trim($fetchit_main_page_body)) > 0) {
-    $output ='<p>'.$fetchit_main_page_body.'</p>'; 
-  } else {
-    global $user;
-    $user_uid = (int) $user->uid;
-    $user_name = $user->name;
-    $today = date('F j, Y');
-    $output = '<p>'.t('Welcome, '.$user_name.', to the external query module (fetchit) main page.').'</p>';
-    $results = fetchit_menu();
-    $output .= '<p><i>'.t('You can modify this page content by modifying the fetchit_settings content type record. (Do NOT create more that one record/node of this type.)').'</i></p>';
-  }
-  return $output;
+	$d7tablename = F2_D7_CTYPE_BODY_TBL; //'field_data_body';	
+	$d7condition1fieldname = F2_D7_FIELD_SUBTYPE_FLDNAME; //'bundle';
+	$d7condition1value = F2_D7_SETTINGS_CTYPE_NAME; //'fetchit2_settings';
+	$d7returnfieldname = F2_D7_CTYPE_BODY_TBL; //'body_value';
+	$query = db_select($d7tablename, 'n')
+	->condition($d7condition1fieldname, $d7condition1value)
+	->fields('n', array($d7returnfieldname));
+	$result = $query->execute();
+	foreach ($result as $row) {
+		$fetchit_main_page_body = $row->$d7returnfieldname;
+	}
+	//drupal_set_message(t('name = ').$settings[F2_D7_SETTINGS_MNAME],'Warning');
+	if (strlen(trim($fetchit_main_page_body)) > 0) {
+		$output ='<p>'.$fetchit_main_page_body.'</p>'; 
+	} else {
+	    global $user;
+    	$user_uid = (int) $user->uid;
+    	$user_name = $user->name;
+    	$today = date('F j, Y');
+    	$output = '<p>'.t('Welcome, '.$user_name.', to the external query module (fetchit) main page.').'</p>';
+    	$results = fetchit_menu();
+    	$output .= '<p><i>'.t('You can modify this page content by modifying the fetchit_settings content type record. (Do NOT create more that one record/node of this type.)').'</i></p>';
+  	}
+  	return $output;
 }
 /*
  * fetchit generic query page callback
