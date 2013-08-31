@@ -5629,10 +5629,10 @@ function fetchit_get_cck_val($t,$rf,$wf,$wfv) {
   //  $result = $r->$rf;
   //}
 	// rewrite to use drupal 7 database schema query builder API
+	$val = null;
 	$query = db_select($t, 't')
 		->condition($wf, $wfv)
-		->fields('t', array($rf))
-		->range(0,1);
+		->fields('t', array($rf));
 	$result = $query->execute();
 	foreach ($result as $row) {
 		$val = $row->$rf;
