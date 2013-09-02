@@ -1342,7 +1342,8 @@ function fetchit_set_existing_selection_nid (&$db_handle,&$db_type,$nid,$val) {
  * define the html table form
  * (with optional radio and checkbox column to make it a selection form)
  */
-function fetchit_table_html_form_builder(&$form_state,$form_id,$args) {
+//function fetchit_table_html_form_builder(&$form_state,$form_id,$args) {
+function fetchit_table_html_form_builder($form,&$form_state,$args) {
 	/*
 	 * redefine the arguments from the args array
 	 * (&$form_state, $nid, $type) 
