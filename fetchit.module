@@ -1355,7 +1355,7 @@ function fetchit_table_html_form_builder($form,&$form_state,$args) {
 	 * (&$form_state, $nid, $type) 
 	 */
 	$nid = $args[0];
-	drupal_set_message("jhb debugging: fetchit_table_html_form_builder: args $args[0] $args[1] $args[2 $args[3]");
+	drupal_set_message("jhb debugging: fetchit_table_html_form_builder: args $args[0] $args[1] $args[2] $args[3]");
 	
 	$form['nid'] = array('#type' => 'value','#value' => $nid);
 	/*
