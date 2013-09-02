@@ -60,13 +60,20 @@ define("F2_D7_CTYPE_DBPORT_FLD",F2_D7_CTYPE_DBPORT.F2_D7_FIELD_VAL_SUFFIX);
    define("F2_D7_CTYPE_RECSEL","field_fetchit2_record_select");
    define("F2_D7_CTYPE_RECTBL","field_fetchit2_record_select_tbl");
    define("F2_D7_CTYPE_SUBLBL","field_fetchit2_submit_label");
-   define("F2_D7_CTYPE_POSTFN","field_fetchit2_post_function");
+
+define("F2_D7_CTYPE_PREFN","field_fetchit2_pre_function");
+define("F2_D7_CTYPE_PREFN_TBL",F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPE_PREFN);
+define("F2_D7_CTYPE_PREFN_FLD",F2_D7_CTYPE_PREFN.F2_D7_FIELD_VAL_SUFFIX);
+define("F2_D7_CTYPE_POSTFN","field_fetchit2_post_function");
+define("F2_D7_CTYPE_POSTFN_TBL",F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPE_POSTFN);
+define("F2_D7_CTYPE_POSTFN_FLD",F2_D7_CTYPE_POSTFN.F2_D7_FIELD_VAL_SUFFIX);
+
    define("F2_D7_CTYPE_REDIR","field_fetchit2_redirect");
    define("F2_D7_CTYPE_VALID","field_fetchit2_validate");
    define("F2_D7_CTYPE_SUBMIT","field_fetchit2_submit");
    define("F2_D7_CTYPE_CTITLE","field_fetchit2_content_title");
    define("F2_D7_CTYPE_CDESC","field_fetchit2_content_desc");
-   
+
 define("F2_D7_CTYPE_ABOVE","field_fetchit2_custom_above");
 define("F2_D7_CTYPE_ABOVE_TBL",F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPE_ABOVE);
 define("F2_D7_CTYPE_ABOVE_FLD",F2_D7_CTYPE_ABOVE.F2_D7_FIELD_VAL_SUFFIX);

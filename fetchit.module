@@ -675,9 +675,14 @@ function fetchit_run_prequery(&$err,$nid) {
 	return $result;
 }
 function fetchit_get_preqry(&$err,$nid) {
-	$mytable = F_DR_PREQRY_TBL;
-	$myfield = F_DR_PREQRY_FLD;
-	return fetchit_get_cck_val($mytable,$myfield,F_DR_NID_FLD,$nid);
+	//$mytable = F_DR_PREQRY_TBL;
+	//$myfield = F_DR_PREQRY_FLD;
+	//return fetchit_get_cck_val($mytable,$myfield,F_DR_NID_FLD,$nid);
+	$table = F2_D7_CTYPE_PREFN_TBL; // field_data_field_fetchit2_pre_function
+	$returnfield = F2_D7_CTYPE_PREFN_FLD; // field_fetchit2_pre_function_value
+	$conditionfield = F2_D7_FIELD_TYPEID_FLDNAME; // entity_id
+	$conditionvalue = $nid;
+	return fetchit_get_cck_val($table,$returnfield,$conditionfield,$conditionvalue);
 }
 /*
  * run the fetchit postquery
@@ -728,8 +733,8 @@ function getFetchitContent($type, $nid, $dest) {
 		
 		switch ($type) {
 			case F_DR_TYPE_HTML_TABLE_NDX: //html table
-				$output .= "blahblahblah a table goes here blahblahblah";
-				//$output .= drupal_get_form('fetchit_table_html_form_'.$nid,$nid);
+				//$output .= "blahblahblah a table goes here blahblahblah";
+				$output .= drupal_get_form('fetchit_table_html_form_'.$nid,$nid);
 				//$output .= drupal_get_form('fetchit_table_html_test_form_builder',$nid);
 				break;
 			case F_DR_TYPE_GVIZ_NDX: //gviz
@@ -1035,60 +1040,87 @@ function fetchitRemoveFromList($comma_delimited_list,$item_to_remove) {
 	}
 	return $new_list;
 }
+function fetchit_get_db_prequery(&$err,$nid) {
+	$db_type = null;
+	//$db_type = fetchit_get_cck_val(F_DR_DB_TYPE_TBL,F_DR_DB_TYPE_FLD,F_DR_NID_FLD,$nid)
+	$table = F2_D7_CTYPE_DBTYPE_TBL; // field_data_field_fetch_it_db_type
+	$returnfield = F2_D7_CTYPE_ENABLE_FLD; // field_fetch_it_db_type_value
+	$conditionfield = F2_D7_FIELD_TYPEID_FLDNAME; // entity_id
+	$conditionvalue = $nid;
+	$db_type = fetchit_get_cck_val($table,$returnfield,$conditionfield,$conditionvalue);
+	if(!strlen(trim($db_type))) {
+		$err=1;
+	}
+	return $db_type;
+}
 function fetchit_get_db_type(&$err,$nid) {
-	if(!strlen(trim($db_type = fetchit_get_cck_val(F_DR_DB_TYPE_TBL,F_DR_DB_TYPE_FLD,F_DR_NID_FLD,$nid)))) {
+	$db_type = null;
+	//$db_type = fetchit_get_cck_val(F_DR_DB_TYPE_TBL,F_DR_DB_TYPE_FLD,F_DR_NID_FLD,$nid)
+	$table = F2_D7_CTYPE_DBTYPE_TBL; // field_data_field_fetch_it_db_type
+	$returnfield = F2_D7_CTYPE_ENABLE_FLD; // field_fetch_it_db_type_value
+	$conditionfield = F2_D7_FIELD_TYPEID_FLDNAME; // entity_id
+	$conditionvalue = $nid;
+	$db_type = fetchit_get_cck_val($table,$returnfield,$conditionfield,$conditionvalue);
+	if(!strlen(trim($db_type))) {
 		$err=1;
 	}
 	return $db_type;
 }
 function fetchit_get_db_handle(&$err,$nid) {
-	if(!strlen(trim($db_type = fetchit_get_cck_val(F_DR_DB_TYPE_TBL,F_DR_DB_TYPE_FLD,F_DR_NID_FLD,$nid)))) {
+	$db_handle = null;
+	//$db_type = fetchit_get_cck_val(F_DR_DB_TYPE_TBL,F_DR_DB_TYPE_FLD,F_DR_NID_FLD,$nid)
+	$table = F2_D7_CTYPE_DBTYPE_TBL; // field_data_field_fetch_it_db_type
+	$returnfield = F2_D7_CTYPE_ENABLE_FLD; // field_fetch_it_db_type_value
+	$conditionfield = F2_D7_FIELD_TYPEID_FLDNAME; // entity_id
+	$conditionvalue = $nid;
+	$db_type = fetchit_get_cck_val($table,$returnfield,$conditionfield,$conditionvalue);
+	if(strlen(trim($db_type))) {
+		switch ($db_type) {
+			case F_DR_DBTYPE_PGSQL:
+				/*
+				 * these are required for remote pg db connections
+				 */
+				if(!strlen(trim($db_host = fetchit_get_cck_val(F_DR_DB_HOST_TBL,F_DR_DB_HOST_FLD,F_DR_NID_FLD,$nid)))) {
+					$err=2;
+					return $db_handle;
+				}
+				if(!strlen(trim($db_port = fetchit_get_cck_val(F_DR_DB_PORT_TBL,F_DR_DB_PORT_FLD,F_DR_NID_FLD,$nid)))) {
+					$err=3;
+					return $db_handle;
+				}
+				if(!strlen(trim($db_name = fetchit_get_cck_val(F_DR_DB_NAME_TBL,F_DR_DB_NAME_FLD,F_DR_NID_FLD,$nid)))) {
+					$err=4;
+					return $db_handle;
+				}
+				if(!strlen(trim($db_user = fetchit_get_cck_val(F_DR_DB_USER_TBL,F_DR_DB_USER_FLD,F_DR_NID_FLD,$nid)))) {
+					$err=5;
+					return $db_handle;
+				}
+				if(!strlen(trim($db_password = fetchit_get_cck_val(F_DR_DB_PWRD_TBL,F_DR_DB_PWRD_FLD,F_DR_NID_FLD,$nid)))) {
+					$err=6;
+					return $db_handle;
+				}
+				/*
+				 * create the pg connection
+				 */
+				$db_string = "host=$db_host port=$db_port user=$db_user password=$db_password dbname=$db_name";
+				$db_handle = pg_connect($db_string);
+				if(!$db_handle) {
+					$err=7;
+					return $db_handle;
+				}
+				break;
+			case F_DR_DBTYPE_MYSQL:
+				$err=10;
+				break;
+			case F_DR_DBTYPE_MSSQL:
+				$err=11;
+				break;
+			default:
+				$err=12;
+		}
+	} else {
 		$err=1;
-		return $db_handle;
-	}
-	switch ($db_type) {
-		case F_DR_DBTYPE_PGSQL:
-			/*
-			 * these are required for remote pg db connections
-			 */
-			if(!strlen(trim($db_host = fetchit_get_cck_val(F_DR_DB_HOST_TBL,F_DR_DB_HOST_FLD,F_DR_NID_FLD,$nid)))) {
-				$err=2;
-				return $db_handle;
-			}
-			if(!strlen(trim($db_port = fetchit_get_cck_val(F_DR_DB_PORT_TBL,F_DR_DB_PORT_FLD,F_DR_NID_FLD,$nid)))) {
-				$err=3;
-				return $db_handle;
-			}
-			if(!strlen(trim($db_name = fetchit_get_cck_val(F_DR_DB_NAME_TBL,F_DR_DB_NAME_FLD,F_DR_NID_FLD,$nid)))) {
-				$err=4;
-				return $db_handle;
-			}
-			if(!strlen(trim($db_user = fetchit_get_cck_val(F_DR_DB_USER_TBL,F_DR_DB_USER_FLD,F_DR_NID_FLD,$nid)))) {
-				$err=5;
-				return $db_handle;
-			}
-			if(!strlen(trim($db_password = fetchit_get_cck_val(F_DR_DB_PWRD_TBL,F_DR_DB_PWRD_FLD,F_DR_NID_FLD,$nid)))) {
-				$err=6;
-				return $db_handle;
-			}
-			/*
-			 * create the pg connection
-			 */
-			$db_string = "host=$db_host port=$db_port user=$db_user password=$db_password dbname=$db_name";
-			$db_handle = pg_connect($db_string);
-			if(!$db_handle) {
-				$err=7;
-				return $db_handle;
-			}
-			break;
-		case F_DR_DBTYPE_MYSQL:
-			$err=10;
-			break;
-		case F_DR_DBTYPE_MSSQL:
-			$err=11;
-			break;
-		default:
-			$err=12;
 	}
 	return $db_handle;
 }
@@ -1350,13 +1382,15 @@ function fetchit_table_html_form_builder(&$form_state,$form_id,$args) {
 	 * store all the data in the form
 	 * and then use a theme function to render it
 	 */
-	if($db_type = fetchit_get_cck_val(F_DR_DB_TYPE_TBL,F_DR_DB_TYPE_FLD,F_DR_NID_FLD,$nid)) {
+	// get database type and store it in the form object
+	if($db_type = fetchit_get_db_type($err,$nid))) {
 		$form['db_type'] = array('#type' => 'value','#value' => $db_type);
 	} else {
 		$err = 1;
 		drupal_set_message("An error occurred when accessing the database type. Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
+	// get database handle and store it in the form object
 	if ($db_handle = fetchit_get_db_handle($err,$nid)) {
 		$form['db_handle'] = array('#type' => 'value','#value' => $db_handle);
 	} else {
@@ -1365,10 +1399,11 @@ function fetchit_table_html_form_builder(&$form_state,$form_id,$args) {
 	}
 	/*
 	 * run the pre query before doing anything else 
-	 */
-	$mytable = F_DR_PREQRY_TBL;
-	$myfield = F_DR_PREQRY_FLD;
-	$preqry = fetchit_get_cck_val($mytable,$myfield,F_DR_NID_FLD,$nid);
+	 */ 
+	//$mytable = F_DR_PREQRY_TBL;
+	//$myfield = F_DR_PREQRY_FLD;
+	//$preqry = fetchit_get_cck_val($mytable,$myfield,F_DR_NID_FLD,$nid);
+	$preqry = fetchit_get_preqry($err,$nid);
 	if (strlen(trim($preqry))) {
 		if (strtolower(substr($preqry,0,4)) == 'php.') {
 			$thefunction = substr($preqry,4); 
@@ -1379,13 +1414,15 @@ function fetchit_table_html_form_builder(&$form_state,$form_id,$args) {
 			$result = fetchit_run_query($err,$db_type,$db_handle,$preqry);
 		}
 	}
+	// for debugging only:
+	return $form;
 	/*
 	 * get the table's data, then get the field count, field names and field types
 	 * note that here we are just creating the form objects, not rendering them
 	 * that will be done in the theme function
 	 * however, note also that some data are stored in the form in NON RENDERABLE objects, such as value objects
 	 * this makes it easy to pass parameters to the theme function
-	 * also not that I tried to make it db agnostic at this level, though the underlying routines
+	 * also note that I tried to make it db agnostic at this level, though the underlying routines
 	 * were initially working for pg only
 	 */
 	if(strlen(trim($view_name = fetchit_get_cck_val(F_DR_CONTENT_VIEW_TBL,F_DR_CONTENT_VIEW_FLD,F_DR_NID_FLD,$nid)))) {
