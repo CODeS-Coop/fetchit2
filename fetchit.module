@@ -1351,17 +1351,8 @@ function fetchit_set_existing_selection_nid (&$db_handle,&$db_type,$nid,$val) {
 //function fetchit_table_html_form_builder(&$form_state,$form_id,$args) {
 //function fetchit_table_html_form_builder($form,&$form_state,$args) {
 function fetchit_table_html_form_builder($form,&$form_state) {
-	$arg0 = $form_state['build_info']['args'][0];
-	$arg1 = $form_state['build_info']['args'][1];
-	/*
-	 * redefine the arguments from the args array
-	 * (&$form_state, $nid, $type) 
-	 */
-	//$nid = $args[0];
-	drupal_set_message("jhb debugging: fetchit_table_html_form_builder: args $arg0 $arg1");
-	// for debugging only:
-	return $form;
-	
+	//get the extra arg passed into the form builder function
+	$nid = $form_state['build_info']['args'][0];
 	$form['nid'] = array('#type' => 'value','#value' => $nid);
 	/*
 	 * create the form fieldset
@@ -1406,6 +1397,8 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 		drupal_set_message("An error occurred when accessing the database type. Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
+	//for debugging only:
+	return $form;
 	// get database handle and store it in the form object
 	if ($db_handle = fetchit_get_db_handle($err,$nid)) {
 		$form['db_handle'] = array('#type' => 'value','#value' => $db_handle);
