@@ -1057,7 +1057,7 @@ function fetchit_get_db_type(&$err,$nid) {
 	$db_type = null;
 	//$db_type = fetchit_get_cck_val(F_DR_DB_TYPE_TBL,F_DR_DB_TYPE_FLD,F_DR_NID_FLD,$nid)
 	$table = F2_D7_CTYPE_DBTYPE_TBL; // field_data_field_fetch_it_db_type
-	$returnfield = F2_D7_CTYPE_ENABLE_FLD; // field_fetch_it_db_type_value
+	$returnfield = F2_D7_CTYPE_DBTYPE_FLD; // field_fetch_it_db_type_value
 	$conditionfield = F2_D7_FIELD_TYPEID_FLDNAME; // entity_id
 	$conditionvalue = $nid;
 	$db_type = fetchit_get_cck_val($table,$returnfield,$conditionfield,$conditionvalue);
@@ -1391,6 +1391,8 @@ function fetchit_table_html_form_builder($form,&$form_state,$args) {
 		drupal_set_message("An error occurred when accessing the database type. Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
+	// for debugging only:
+	return $form;
 	// get database handle and store it in the form object
 	if ($db_handle = fetchit_get_db_handle($err,$nid)) {
 		$form['db_handle'] = array('#type' => 'value','#value' => $db_handle);
@@ -1415,8 +1417,6 @@ function fetchit_table_html_form_builder($form,&$form_state,$args) {
 			$result = fetchit_run_query($err,$db_type,$db_handle,$preqry);
 		}
 	}
-	// for debugging only:
-	return $form;
 	/*
 	 * get the table's data, then get the field count, field names and field types
 	 * note that here we are just creating the form objects, not rendering them
