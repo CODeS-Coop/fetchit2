@@ -1060,49 +1060,43 @@ function fetchit_get_db_type(&$err,$nid) {
 	$returnfield = F2_D7_CTYPE_DBTYPE_FLD; // field_fetch_it_db_type_value
 	$conditionfield = F2_D7_FIELD_TYPEID_FLDNAME; // entity_id
 	$conditionvalue = $nid;
-	drupal_set_message("jhb debugging: fetchit_get_db_type: nid $nid db_type = $db_type");
-	drupal_set_message("jhb debugging: fetchit_get_db_type: table $table");
-	drupal_set_message("jhb debugging: fetchit_get_db_type: returnfield $returnfield");
-	drupal_set_message("jhb debugging: fetchit_get_db_type: conditionfield $conditionfield");
-	drupal_set_message("jhb debugging: fetchit_get_db_type: conditionvalue $conditionvalue");
+	//drupal_set_message("jhb debugging: fetchit_get_db_type: nid $nid db_type = $db_type");
+	//drupal_set_message("jhb debugging: fetchit_get_db_type: table $table");
+	//drupal_set_message("jhb debugging: fetchit_get_db_type: returnfield $returnfield");
+	//drupal_set_message("jhb debugging: fetchit_get_db_type: conditionfield $conditionfield");
+	//drupal_set_message("jhb debugging: fetchit_get_db_type: conditionvalue $conditionvalue");
 	$db_type = fetchit_get_cck_val($table,$returnfield,$conditionfield,$conditionvalue);
-	drupal_set_message("jhb debugging: fetchit_get_db_type: nid $nid db_type = $db_type");
-	//if(!strlen(trim($db_type))) {
-	//	$err=1;
-	//}
+	//drupal_set_message("jhb debugging: fetchit_get_db_type: nid $nid db_type = $db_type");
+	if(!strlen(trim($db_type))) {
+		$err=1;
+	}
 	return $db_type;
 }
 function fetchit_get_db_handle(&$err,$nid) {
 	$db_handle = null;
-	//$db_type = fetchit_get_cck_val(F_DR_DB_TYPE_TBL,F_DR_DB_TYPE_FLD,F_DR_NID_FLD,$nid)
-	$table = F2_D7_CTYPE_DBTYPE_TBL; // field_data_field_fetch_it_db_type
-	$returnfield = F2_D7_CTYPE_ENABLE_FLD; // field_fetch_it_db_type_value
-	$conditionfield = F2_D7_FIELD_TYPEID_FLDNAME; // entity_id
-	$conditionvalue = $nid;
-	$db_type = fetchit_get_cck_val($table,$returnfield,$conditionfield,$conditionvalue);
-	if(strlen(trim($db_type))) {
+	if(strlen(trim($db_type=fetchit_get_db_type($err,$nid)))) {
 		switch ($db_type) {
 			case F_DR_DBTYPE_PGSQL:
 				/*
 				 * these are required for remote pg db connections
 				 */
-				if(!strlen(trim($db_host = fetchit_get_cck_val(F_DR_DB_HOST_TBL,F_DR_DB_HOST_FLD,F_DR_NID_FLD,$nid)))) {
+				if(!strlen(trim($db_host = fetchit_get_cck_val(F2_D7_CTYPE_DBHOST_TBL,F2_D7_CTYPE_DBHOST_TBL,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
 					$err=2;
 					return $db_handle;
 				}
-				if(!strlen(trim($db_port = fetchit_get_cck_val(F_DR_DB_PORT_TBL,F_DR_DB_PORT_FLD,F_DR_NID_FLD,$nid)))) {
+				if(!strlen(trim($db_port = fetchit_get_cck_val(F2_D7_CTYPE_DBPORT_TBL,F2_D7_CTYPE_DBPORT_TBL,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
 					$err=3;
 					return $db_handle;
 				}
-				if(!strlen(trim($db_name = fetchit_get_cck_val(F_DR_DB_NAME_TBL,F_DR_DB_NAME_FLD,F_DR_NID_FLD,$nid)))) {
+				if(!strlen(trim($db_name = fetchit_get_cck_val(F2_D7_CTYPE_DBNAME_TBL,F2_D7_CTYPE_DBNAME_TBL,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
 					$err=4;
 					return $db_handle;
 				}
-				if(!strlen(trim($db_user = fetchit_get_cck_val(F_DR_DB_USER_TBL,F_DR_DB_USER_FLD,F_DR_NID_FLD,$nid)))) {
+				if(!strlen(trim($db_user = fetchit_get_cck_val(F2_D7_CTYPE_DBUSER_TBL,F2_D7_CTYPE_DBUSER_TBL,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
 					$err=5;
 					return $db_handle;
 				}
-				if(!strlen(trim($db_password = fetchit_get_cck_val(F_DR_DB_PWRD_TBL,F_DR_DB_PWRD_FLD,F_DR_NID_FLD,$nid)))) {
+				if(!strlen(trim($db_password = fetchit_get_cck_val(F2_D7_CTYPE_DBPW_TBL,F2_D7_CTYPE_DBPW_TBL,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
 					$err=6;
 					return $db_handle;
 				}
@@ -1397,8 +1391,6 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 		drupal_set_message("An error occurred when accessing the database type. Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
-	//for debugging only:
-	return $form;
 	// get database handle and store it in the form object
 	if ($db_handle = fetchit_get_db_handle($err,$nid)) {
 		$form['db_handle'] = array('#type' => 'value','#value' => $db_handle);
@@ -1406,6 +1398,8 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 		if ($err) drupal_set_message("An error occurred when creating the database connection. Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
+	//for debugging only:
+	return $form;
 	/*
 	 * run the pre query before doing anything else 
 	 */ 
