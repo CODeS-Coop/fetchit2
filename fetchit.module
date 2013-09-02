@@ -1383,7 +1383,7 @@ function fetchit_table_html_form_builder(&$form_state,$form_id,$args) {
 	 * and then use a theme function to render it
 	 */
 	// get database type and store it in the form object
-	if($db_type = fetchit_get_db_type($err,$nid))) {
+	if($db_type = fetchit_get_db_type($err,$nid)) {
 		$form['db_type'] = array('#type' => 'value','#value' => $db_type);
 	} else {
 		$err = 1;
