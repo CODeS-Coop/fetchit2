@@ -1080,23 +1080,23 @@ function fetchit_get_db_handle(&$err,$nid) {
 				/*
 				 * these are required for remote pg db connections
 				 */
-				if(!strlen(trim($db_host = fetchit_get_cck_val(F2_D7_CTYPE_DBHOST_TBL,F2_D7_CTYPE_DBHOST_TBL,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
+				if(!strlen(trim($db_host = fetchit_get_cck_val(F2_D7_CTYPE_DBHOST_TBL,F2_D7_CTYPE_DBHOST_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
 					$err=2;
 					return $db_handle;
 				}
-				if(!strlen(trim($db_port = fetchit_get_cck_val(F2_D7_CTYPE_DBPORT_TBL,F2_D7_CTYPE_DBPORT_TBL,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
+				if(!strlen(trim($db_port = fetchit_get_cck_val(F2_D7_CTYPE_DBPORT_TBL,F2_D7_CTYPE_DBPORT_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
 					$err=3;
 					return $db_handle;
 				}
-				if(!strlen(trim($db_name = fetchit_get_cck_val(F2_D7_CTYPE_DBNAME_TBL,F2_D7_CTYPE_DBNAME_TBL,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
+				if(!strlen(trim($db_name = fetchit_get_cck_val(F2_D7_CTYPE_DBNAME_TBL,F2_D7_CTYPE_DBNAME_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
 					$err=4;
 					return $db_handle;
 				}
-				if(!strlen(trim($db_user = fetchit_get_cck_val(F2_D7_CTYPE_DBUSER_TBL,F2_D7_CTYPE_DBUSER_TBL,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
+				if(!strlen(trim($db_user = fetchit_get_cck_val(F2_D7_CTYPE_DBUSER_TBL,F2_D7_CTYPE_DBUSER_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
 					$err=5;
 					return $db_handle;
 				}
-				if(!strlen(trim($db_password = fetchit_get_cck_val(F2_D7_CTYPE_DBPW_TBL,F2_D7_CTYPE_DBPW_TBL,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
+				if(!strlen(trim($db_password = fetchit_get_cck_val(F2_D7_CTYPE_DBPW_TBL,F2_D7_CTYPE_DBPW_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
 					$err=6;
 					return $db_handle;
 				}
