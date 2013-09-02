@@ -1060,10 +1060,16 @@ function fetchit_get_db_type(&$err,$nid) {
 	$returnfield = F2_D7_CTYPE_DBTYPE_FLD; // field_fetch_it_db_type_value
 	$conditionfield = F2_D7_FIELD_TYPEID_FLDNAME; // entity_id
 	$conditionvalue = $nid;
+	drupal_set_message("jhb debugging: fetchit_get_db_type: nid $nid db_type = $db_type");
+	drupal_set_message("jhb debugging: fetchit_get_db_type: table $table");
+	drupal_set_message("jhb debugging: fetchit_get_db_type: returnfield $returnfield");
+	drupal_set_message("jhb debugging: fetchit_get_db_type: conditionfield $conditionfield");
+	drupal_set_message("jhb debugging: fetchit_get_db_type: conditionvalue $conditionvalue");
 	$db_type = fetchit_get_cck_val($table,$returnfield,$conditionfield,$conditionvalue);
-	if(!strlen(trim($db_type))) {
-		$err=1;
-	}
+	drupal_set_message("jhb debugging: fetchit_get_db_type: nid $nid db_type = $db_type");
+	//if(!strlen(trim($db_type))) {
+	//	$err=1;
+	//}
 	return $db_type;
 }
 function fetchit_get_db_handle(&$err,$nid) {
@@ -1384,7 +1390,9 @@ function fetchit_table_html_form_builder($form,&$form_state,$args) {
 	 * and then use a theme function to render it
 	 */
 	// get database type and store it in the form object
-	if($db_type = fetchit_get_db_type($err,$nid)) {
+	$db_type = fetchit_get_db_type($err,$nid);
+	drupal_set_message("jhb debugging: nid $nid db_type = $db_type");
+	if($db_type) {
 		$form['db_type'] = array('#type' => 'value','#value' => $db_type);
 	} else {
 		$err = 1;
