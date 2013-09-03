@@ -1104,7 +1104,7 @@ function fetchit_get_db_handle(&$err,$nid) {
 				 * create the pg connection
 				 */
 				$db_string = "host=$db_host port=$db_port user=$db_user password=$db_password dbname=$db_name";
-				drupal_set_message("jhb debugging: fetchit_get_db_handle: db_string $db_string");
+				//drupal_set_message("jhb debugging: fetchit_get_db_handle: db_string $db_string");
 				$db_handle = pg_connect($db_string);
 				if(!$db_handle) {
 					$err=7;
@@ -1346,9 +1346,12 @@ function fetchit_set_existing_selection_nid (&$db_handle,&$db_type,$nid,$val) {
 //function fetchit_table_html_form_builder(&$form_state,$form_id,$args) {
 //function fetchit_table_html_form_builder($form,&$form_state,$args) {
 function fetchit_table_html_form_builder($form,&$form_state) {
-	$form = array();
 	//get the extra arg passed into the form builder function
 	$nid = $form_state['build_info']['args'][0];
+	//for debugging only:
+	$form['nid'] = array('#type' => 'markup','#value' => $nid);
+	return $form;
+	
 	$form['nid'] = array('#type' => 'value','#value' => $nid);
 	/*
 	 * create the form fieldset
@@ -1385,7 +1388,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	 */
 	// get database type and store it in the form object
 	$db_type = fetchit_get_db_type($err,$nid);
-	drupal_set_message("jhb debugging: nid $nid db_type = $db_type");
+	//drupal_set_message("jhb debugging: nid $nid db_type = $db_type");
 	if($db_type) {
 		$form['db_type'] = array('#type' => 'value','#value' => $db_type);
 	} else {
@@ -1395,7 +1398,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	}
 	// get database handle and store it in the form object
 	if ($db_handle = fetchit_get_db_handle($err,$nid)) {
-		drupal_set_message("jim: debugging: fetchit_html_form_builder: successfully created handle.");
+		//drupal_set_message("jim: debugging: fetchit_html_form_builder: successfully created handle.");
 		$form['db_handle'] = array('#type' => 'value','#value' => $db_handle);
 	} else {
 		drupal_set_message("An error occurred when creating the database connection.");
@@ -1419,7 +1422,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 			$result = fetchit_run_query($err,$db_type,$db_handle,$preqry);
 		}
 	}
-	drupal_set_message("jim: debugging: fetchit_html_form_builder: ran pre query.");
+	//drupal_set_message("jim: debugging: fetchit_html_form_builder: ran pre query.");
 	/*
 	 * get the table's data, then get the field count, field names and field types
 	 * note that here we are just creating the form objects, not rendering them
@@ -1436,7 +1439,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 		drupal_set_message("An error occurred when accessing the table/view name. Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
-	drupal_set_message("jim: debugging: fetchit_html_form_builder: got view name.");
+	//drupal_set_message("jim: debugging: fetchit_html_form_builder: got view name.");
 	
 	$form['#theme'] = 'fetchit_table_html_form_builder';
 	$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
@@ -1446,7 +1449,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	$db_data_object = fetchit_get_data_object($err,$db_type,$db_handle,$view_name,$user_uid_field);
 	$field_count = fetchit_get_field_count($err,$db_type,$db_data_object);
 	$row_count = fetchit_get_row_count($err,$db_type,$db_data_object);
-	drupal_set_message("jim: debugging: fetchit_html_form_builder: created metadata for table.");
+	//drupal_set_message("jim: debugging: fetchit_html_form_builder: created metadata for table.");
 	
 	$form['field_count'] = array('#type' => 'value','#value' => $field_count);
 	$form['row_count'] = array('#type' => 'value','#value' => $row_count);
@@ -1484,7 +1487,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 			break;
 		default:
 	}
-	drupal_set_message("jim: debugging: fetchit_html_form_builder: handled record select.");
+	//drupal_set_message("jim: debugging: fetchit_html_form_builder: handled record select.");
 	
 	for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
 		$type = 'markup';
@@ -1531,7 +1534,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 			}
 		}
 	}
-	drupal_set_message("jim: debugging: fetchit_html_form_builder: created table content.");
+	//drupal_set_message("jim: debugging: fetchit_html_form_builder: created table content.");
 	
 	switch ($record_select) {
 		case 0:
@@ -1589,7 +1592,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 			break;
 			default:
 	}
-	drupal_set_message("jim: debugging: fetchit_html_form_builder: finished.");
+	//drupal_set_message("jim: debugging: fetchit_html_form_builder: finished.");
 	
 	return $form;
 }
@@ -1598,21 +1601,16 @@ function fetchit_table_html_form_builder($form,&$form_state) {
  */
 //function theme_fetchit_table_html_form_builder($form) {
 function theme_fetchit_table_html_form_builder($variables) {
-	$form = $variables['form'];
-    //define table header
-    //$fieldset_name = $form['fieldset_name']['#value'];
 	drupal_set_message("jim: debugging: theme_fetchit_table_html_form_builder: started.");
-
+	$form = $variables['form'];
 	//for debugging only:
-	$output = "\nhi\n";
-	$output .= "\n<div class=\"node-form\">\n";
-	$output .= "  <div class=\"standard\">\n";
-	$output .= drupal_render_children($form);
-	$output .= "  </div>\n";
-	$output .= "</div>\n";
-	$output .= "\nbye\n";
+	$output = drupal_render_children($form);
 	return $output;
 	
+	
+	//define table header
+    //$fieldset_name = $form['fieldset_name']['#value'];
+
 	$nid = $form['nid']['#value'];
 	$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
 	$field_count = $form['field_count']['#value'];
@@ -2924,16 +2922,16 @@ function fetchit_theme() {
 	 */
 	return array(
 		'fetchit_table_html_form_builder' => array(
-			'render element' => 'form',
+				'render element' => 'form',
 		),
 		'fetchit_table_edit_form_builder' => array(
-			'render element' => 'form',
+				'render element' => 'form',
 		),
 		'fetchit_append_record_form_builder' => array(
-			'render element' => 'form',
+				'render element' => 'form',
 		),
 		'fetchit_parameter_form_builder' => array(
-			'render element' => 'form',
+				'render element' => 'form',
 		),
 	);
 }
