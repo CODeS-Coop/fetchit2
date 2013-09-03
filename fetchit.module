@@ -1105,8 +1105,6 @@ function fetchit_get_db_handle(&$err,$nid) {
 				 */
 				$db_string = "host=$db_host port=$db_port user=$db_user password=$db_password dbname=$db_name";
 				drupal_set_message("jhb debugging: fetchit_get_db_handle: db_string $db_string");
-				//for debugging only
-				return $db_handle;
 				$db_handle = pg_connect($db_string);
 				if(!$db_handle) {
 					$err=7;
@@ -1396,6 +1394,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	}
 	// get database handle and store it in the form object
 	if ($db_handle = fetchit_get_db_handle($err,$nid)) {
+		drupal_set_message("jim: debugging: fetchit_html_form_builder: successfully created handle.");
 		$form['db_handle'] = array('#type' => 'value','#value' => $db_handle);
 	} else {
 		drupal_set_message("An error occurred when creating the database connection.");
