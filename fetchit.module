@@ -1348,7 +1348,6 @@ function fetchit_set_existing_selection_nid (&$db_handle,&$db_type,$nid,$val) {
 //function fetchit_table_html_form_builder($form,&$form_state,$args) {
 function fetchit_table_html_form_builder($form,&$form_state) {
 	//for debugging only:
-	/*
 	$form['customization']['check_in'] = array(
 			'#title' => t("Check in"),
 			'#type' => 'select',
@@ -1358,8 +1357,6 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 					'three' => 'Option 3',
 			)
 	);
-	return $form;
-	*/
 	
 	//get the extra arg passed into the form builder function
 	$nid = $form_state['build_info']['args'][0];
@@ -1470,7 +1467,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	$field_types = fetchit_get_field_types($err,$db_type,$db_data_object);
 	//the following could be a single value or an array of values
 	$existing_selections = fetchit_get_existing_selection_nid($db_handle,$db_type,$nid);
-	drupal_set_message("jim: debugging: fetchit_html_form_builder: setup html table.");
+	//drupal_set_message("jim: debugging: fetchit_html_form_builder: setup html table.");
 	
 	switch ($record_select) {
 		case 0:
