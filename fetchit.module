@@ -734,7 +734,8 @@ function getFetchitContent($type, $nid, $dest) {
 		switch ($type) {
 			case F_DR_TYPE_HTML_TABLE_NDX: //html table
 				//$output .= "blahblahblah a table goes here blahblahblah";
-				$output .= drupal_render_children(drupal_get_form('fetchit_table_html_form_'.$nid,$nid));
+				//$output .= drupal_render_children(drupal_get_form('fetchit_table_html_form_'.$nid,$nid));
+				$output .= drupal_get_form('fetchit_table_html_form_'.$nid,$nid);
 				//$output .= drupal_get_form('fetchit_table_html_test_form_builder',$nid);
 				break;
 			case F_DR_TYPE_GVIZ_NDX: //gviz
