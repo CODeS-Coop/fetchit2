@@ -1600,9 +1600,8 @@ function fetchit_table_html_form_builder($form,&$form_state) {
  * theme the html table form with checkboxes
  */
 //function theme_fetchit_table_html_form_builder($form) {
-function theme_fetchit_table_html_form_builder($variables) {
+function theme_fetchit_table_html_form_builder($form) {
 	drupal_set_message("jim: debugging: theme_fetchit_table_html_form_builder: started.");
-	$form = $variables['form'];
 	//for debugging only:
 	$output = drupal_render_children($form);
 	return $output;
