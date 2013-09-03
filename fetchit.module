@@ -1346,6 +1346,7 @@ function fetchit_set_existing_selection_nid (&$db_handle,&$db_type,$nid,$val) {
 //function fetchit_table_html_form_builder(&$form_state,$form_id,$args) {
 //function fetchit_table_html_form_builder($form,&$form_state,$args) {
 function fetchit_table_html_form_builder($form,&$form_state) {
+	$form = array();
 	//get the extra arg passed into the form builder function
 	$nid = $form_state['build_info']['args'][0];
 	$form['nid'] = array('#type' => 'value','#value' => $nid);
@@ -1595,10 +1596,22 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 /*
  * theme the html table form with checkboxes
  */
-function theme_fetchit_table_html_form_builder($form) {
+//function theme_fetchit_table_html_form_builder($form) {
+function theme_fetchit_table_html_form_builder($variables) {
+	$form = $variables['form'];
     //define table header
     //$fieldset_name = $form['fieldset_name']['#value'];
 	drupal_set_message("jim: debugging: theme_fetchit_table_html_form_builder: started.");
+
+	//for debugging only:
+	$output = "\nhi\n";
+	$output .= "\n<div class=\"node-form\">\n";
+	$output .= "  <div class=\"standard\">\n";
+	$output .= drupal_render_children($form);
+	$output .= "  </div>\n";
+	$output .= "</div>\n";
+	$output .= "\nbye\n";
+	return $output;
 	
 	$nid = $form['nid']['#value'];
 	$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
@@ -2891,6 +2904,7 @@ function getFetchitErrorMsg ($err) {
  * Implementation of hook_theme(). 
  */
 function fetchit_theme() {
+	/* this was the drupal 6 way...
 	return array(
 		'fetchit_table_html_form_builder' => array(
 			'arguments' => array(),
@@ -2904,7 +2918,24 @@ function fetchit_theme() {
 		'fetchit_parameter_form_builder' => array(
 			'arguments' => array(),
 		),
-		);
+	); */
+	/*
+	 * this is the drupal 7 way...
+	 */
+	return array(
+		'fetchit_table_html_form_builder' => array(
+			'render element' => 'form',
+		),
+		'fetchit_table_edit_form_builder' => array(
+			'render element' => 'form',
+		),
+		'fetchit_append_record_form_builder' => array(
+			'render element' => 'form',
+		),
+		'fetchit_parameter_form_builder' => array(
+			'render element' => 'form',
+		),
+	);
 }
 function pg_object_to_html_table($pg_object) {
 	// create an array where each item will be a db table row object converted to an array
