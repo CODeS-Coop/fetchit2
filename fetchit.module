@@ -1344,20 +1344,7 @@ function fetchit_set_existing_selection_nid (&$db_handle,&$db_type,$nid,$val) {
  * define the html table form
  * (with optional radio and checkbox column to make it a selection form)
  */
-//function fetchit_table_html_form_builder(&$form_state,$form_id,$args) {
-//function fetchit_table_html_form_builder($form,&$form_state,$args) {
 function fetchit_table_html_form_builder($form,&$form_state) {
-	//for debugging only:
-	$form['customization']['check_in'] = array(
-			'#title' => t("Check in"),
-			'#type' => 'select',
-			'#options' => array(
-					'one' => 'Option 1',
-					'two' => 'Option 2',
-					'three' => 'Option 3',
-			)
-	);
-	
 	//get the extra arg passed into the form builder function
 	$nid = $form_state['build_info']['args'][0];
 	$form['nid'] = array('#type' => 'value','#value' => $nid);
@@ -1392,33 +1379,23 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	 * create the form content
 	 * a simple pg table
 	 * store all the data in the form
-	 * and then use a theme function to render it
+	 * leave it in render array form
 	 */
-	// get database type and store it in the form object
-	$db_type = fetchit_get_db_type($err,$nid);
-	//drupal_set_message("jhb debugging: nid $nid db_type = $db_type");
-	if($db_type) {
-		//$form['db_type'] = array('#type' => 'value','#value' => $db_type);
-	} else {
+	// get database type
+	if(!$db_type = fetchit_get_db_type($err,$nid)) {
 		$err = 1;
 		drupal_set_message("An error occurred when accessing the database type. Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
-	// get database handle and store it in the form object
-	if ($db_handle = fetchit_get_db_handle($err,$nid)) {
-		//drupal_set_message("jim: debugging: fetchit_html_form_builder: successfully created handle.");
-		//$form['db_handle'] = array('#type' => 'value','#value' => $db_handle);
-	} else {
+	// get database handle
+	if (!$db_handle = fetchit_get_db_handle($err,$nid)) {
 		drupal_set_message("An error occurred when creating the database connection.");
 		if ($err) drupal_set_message("Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
 	/*
-	 * run the pre query before doing anything else 
+	 * run the pre query
 	 */ 
-	//$mytable = F_DR_PREQRY_TBL;
-	//$myfield = F_DR_PREQRY_FLD;
-	//$preqry = fetchit_get_cck_val($mytable,$myfield,F_DR_NID_FLD,$nid);
 	$preqry = fetchit_get_preqry($err,$nid);
 	if (strlen(trim($preqry))) {
 		if (strtolower(substr($preqry,0,4)) == 'php.') {
@@ -1430,26 +1407,17 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 			$result = fetchit_run_query($err,$db_type,$db_handle,$preqry);
 		}
 	}
-	//drupal_set_message("jim: debugging: fetchit_html_form_builder: ran pre query.");
 	/*
 	 * get the table's data, then get the field count, field names and field types
-	 * note that here we are just creating the form objects, not rendering them
-	 * that will be done in the theme function
-	 * however, note also that some data are stored in the form in NON RENDERABLE objects, such as value objects
-	 * this makes it easy to pass parameters to the theme function
-	 * also note that I tried to make it db agnostic at this level, though the underlying routines
-	 * were initially working for pg only
 	 */
-	if(strlen(trim($view_name = fetchit_get_cck_val(F2_D7_CTYPE_VIEWNM_TBL,F2_D7_CTYPE_VIEWNM_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
-		//$form['view_name'] = array('#type' => 'value','#value' => $view_name);
-	} else {
+	if(!strlen(trim($view_name = fetchit_get_cck_val(F2_D7_CTYPE_VIEWNM_TBL,F2_D7_CTYPE_VIEWNM_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
 		$err=8;
 		drupal_set_message("An error occurred when accessing the table/view name. Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
-	//drupal_set_message("jim: debugging: fetchit_html_form_builder: got view name.");
-	
+	//for now do not theme this form
 	//$form['#theme'] = 'fetchit_table_html_form_builder';
+	//get table metadata
 	$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
 	$user_uid_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_UIDFLD_TBL,F2_D7_CTYPE_UIDFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
 	$key_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_KEYFLD_TBL,F2_D7_CTYPE_KEYFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
@@ -1457,17 +1425,13 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	$db_data_object = fetchit_get_data_object($err,$db_type,$db_handle,$view_name,$user_uid_field);
 	$field_count = fetchit_get_field_count($err,$db_type,$db_data_object);
 	$row_count = fetchit_get_row_count($err,$db_type,$db_data_object);
-	//drupal_set_message("jim: debugging: fetchit_html_form_builder: created metadata for table.");
 	
-	//$form['field_count'] = array('#type' => 'value','#value' => $field_count);
-	//$form['row_count'] = array('#type' => 'value','#value' => $row_count);
 	$field_names = array();
 	$field_names = fetchit_get_field_names($err,$db_type,$db_data_object);
 	$field_types = array();
 	$field_types = fetchit_get_field_types($err,$db_type,$db_data_object);
 	//the following could be a single value or an array of values
 	$existing_selections = fetchit_get_existing_selection_nid($db_handle,$db_type,$nid);
-	//drupal_set_message("jim: debugging: fetchit_html_form_builder: setup html table.");
 	
 	switch ($record_select) {
 		case 0:
@@ -1495,12 +1459,13 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 			break;
 		default:
 	}
-	//drupal_set_message("jim: debugging: fetchit_html_form_builder: handled record select.");
-	// create table here instead of in theme function
+
+	// create table
 	$header = array();
 	for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
 		$header[] = $field_names[$field_ndx];
 	}
+	$header[] = "test";
 	$rows = array();
 	for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
 		$row=array();
@@ -1508,6 +1473,15 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 			$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
 			$row[]=$db_value;
 		}
+		$row[] = array(
+			'#title' => t("Check in"),
+			'#type' => 'select',
+			'#options' => array(
+					'one' => 'Option 1',
+					'two' => 'Option 2',
+					'three' => 'Option 3',
+			),
+		);
 		$rows[] = $row;
 	}
 	$form['htmltable'] = array(
