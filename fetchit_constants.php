@@ -59,8 +59,10 @@ define("F2_D7_CTYPE_DBUSER_FLD",F2_D7_CTYPE_DBUSER.F2_D7_FIELD_VAL_SUFFIX);
 define("F2_D7_CTYPE_DBPW","field_fetch_it_db_password");
 define("F2_D7_CTYPE_DBPW_TBL",F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPE_DBPW);
 define("F2_D7_CTYPE_DBPW_FLD",F2_D7_CTYPE_DBPW.F2_D7_FIELD_VAL_SUFFIX);
+define("F2_D7_CTYPE_VIEWNM","field_fetch_it_view_name");
+define("F2_D7_CTYPE_VIEWNM_TBL",F2_D7_FIELD_TBL_PREFIX.F2_D7_CTYPE_VIEWNM);
+define("F2_D7_CTYPE_VIEWNM_FLD",F2_D7_CTYPE_VIEWNM.F2_D7_FIELD_VAL_SUFFIX);
 
-   define("F2_D7_CTYPE_VIEWNM","field_fetch_it_view_name");
    define("F2_D7_CTYPE_UIDFLD","field_fetchit2_user_uid_field");
    define("F2_D7_CTYPE_KEYFLD","field_fetchit2_key_field");
    define("F2_D7_CTYPE_RECSEL","field_fetchit2_record_select");

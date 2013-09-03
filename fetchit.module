@@ -1401,8 +1401,6 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 		if ($err) drupal_set_message("Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
-	//for debugging only:
-	return $form;
 	/*
 	 * run the pre query before doing anything else 
 	 */ 
@@ -1429,13 +1427,16 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	 * also note that I tried to make it db agnostic at this level, though the underlying routines
 	 * were initially working for pg only
 	 */
-	if(strlen(trim($view_name = fetchit_get_cck_val(F_DR_CONTENT_VIEW_TBL,F_DR_CONTENT_VIEW_FLD,F_DR_NID_FLD,$nid)))) {
+	if(strlen(trim($view_name = fetchit_get_cck_val(F2_D7_CTYPE_VIEWNM_TBL,F2_D7_CTYPE_VIEWNM_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
 		$form['view_name'] = array('#type' => 'value','#value' => $view_name);
 	} else {
 		$err=8;
 		drupal_set_message("An error occurred when accessing the table/view name. Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
+	//for debugging only:
+	return $form;
+	
 	$form['#theme'] = 'fetchit_table_html_form_builder';
 	$record_select = fetchit_get_cck_val(F_DR_RECORD_SELECT_TBL,F_DR_RECORD_SELECT_FLD,F_DR_NID_FLD,$nid);
 	$user_uid_field = trim(fetchit_get_cck_val(F_DR_CONTENT_UID_TBL,F_DR_CONTENT_UID_FLD,F_DR_NID_FLD,$nid));
