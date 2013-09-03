@@ -1348,6 +1348,7 @@ function fetchit_set_existing_selection_nid (&$db_handle,&$db_type,$nid,$val) {
 //function fetchit_table_html_form_builder($form,&$form_state,$args) {
 function fetchit_table_html_form_builder($form,&$form_state) {
 	//for debugging only:
+	/*
 	$form['customization']['check_in'] = array(
 			'#title' => t("Check in"),
 			'#type' => 'select',
@@ -1358,7 +1359,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 			)
 	);
 	return $form;
-	
+	*/
 	
 	//get the extra arg passed into the form builder function
 	$nid = $form_state['build_info']['args'][0];
