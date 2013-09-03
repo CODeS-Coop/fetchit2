@@ -1440,8 +1440,6 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	$user_uid_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_UIDFLD_TBL,F2_D7_CTYPE_UIDFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
 	$key_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_KEYFLD_TBL,F2_D7_CTYPE_KEYFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
 	$submit_label = trim(fetchit_get_cck_val(F2_D7_CTYPE_SUBLBL_TBL,F2_D7_CTYPE_SUBLBL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
-	//for debugging only:
-	return $form;
 	$db_data_object = fetchit_get_data_object($err,$db_type,$db_handle,$view_name,$user_uid_field);
 	$field_count = fetchit_get_field_count($err,$db_type,$db_data_object);
 	$row_count = fetchit_get_row_count($err,$db_type,$db_data_object);
@@ -1451,6 +1449,8 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	$field_names = fetchit_get_field_names($err,$db_type,$db_data_object);
 	$field_types = array();
 	$field_types = fetchit_get_field_types($err,$db_type,$db_data_object);
+	//for debugging only:
+	return $form;
 	//the following could be a single value or an array of values
 	$existing_selections = fetchit_get_existing_selection_nid($db_handle,$db_type,$nid);
 	switch ($record_select) {
