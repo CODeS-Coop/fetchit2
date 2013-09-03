@@ -1474,15 +1474,15 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 			$row[]=$db_value;
 		}
 		$row[] = drupal_render(array(
-				'#title' => t("Check in"),
-				'#type' => 'select',
-				'#options' => array(
+					'#title' => t("Check in"),
+					'#type' => 'select',
+					'#options' => array(
 						'one' => 'Option 1',
 						'two' => 'Option 2',
 						'three' => 'Option 3',
-				),
-			)
-		);
+						),
+					)
+				);
 		$rows[] = $row;
 	}
 	$form['htmltable'] = array(
