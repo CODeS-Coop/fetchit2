@@ -1430,9 +1430,10 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	$field_names = fetchit_get_field_names($err,$db_type,$db_data_object);
 	$field_types = array();
 	$field_types = fetchit_get_field_types($err,$db_type,$db_data_object);
-	//the following could be a single value or an array of values
+	// existing record selections use the key field and a separate table containing selected key(s)
+	// could be a single value or an array of values
 	$existing_selections = fetchit_get_existing_selection_nid($db_handle,$db_type,$nid);
-	
+	//set up the options and default values arrays needed for record selection
 	switch ($record_select) {
 		case 0:
 			break;
@@ -1460,25 +1461,51 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 		default:
 	}
 
-	// create table
+	// create table header
 	$header = array();
-	for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
-		$header[] = $field_names[$field_ndx];
+	//create extra column when record selection is enabled
+	switch ($record_select) {
+		case 0:
+			break;
+		case 1:
+			$header[] = 'Select:';
+			break;
+		case 2:
+			$header[] = 'Select:';
+			break;
+		case 3:
+			$header[] = 'Select:';
+			break;
+		default:
 	}
-	$header[] = "test";
+	$uid_field = -1;
+	$key_field = -1;
+	for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
+		if ( $field_names[$field_ndx] == $user_uid_field) {
+			//save it but do not create a column
+			$uid_field = $field_ndx;
+		} else {
+			if ( $field_names[$field_ndx] == $key_field ) {
+				//save it but do not create a column
+				$key_field = $field_ndx;
+			} else {
+				$header[] = $field_names[$field_ndx];
+			}
+		}
+	}
+
+	//first get the selected values if necessary
+	
+	//create the table values
 	$rows = array();
 	for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
 		$row=array();
 		for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
+			//first figure out if this is a selected row
+			//then 
 			$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
 			$row[]=$db_value;
 		}
-		$element = array(
-					'#title' => t("Check in"),
-					'#type' => 'select',
-					'#options' => array('one' => 'Option 1','two' => 'Option 2','three' => 'Option 3'),
-					); 
-		$row[] = drupal_render($element);
 		$rows[] = $row;
 	}
 	$form['htmltable'] = array(
@@ -1488,6 +1515,16 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 			);
 	return $form;
 	
+	
+	//$element = array(
+	//			'#title' => t("Check in"),
+	//			'#type' => 'select',
+	//			'#options' => array('one' => 'Option 1','two' => 'Option 2','three' => 'Option 3'),
+	//			);
+	//$row[] = drupal_render($element);
+	
+	
+
 	for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
 		$type = 'markup';
 		if ( $field_names[$field_ndx] == $user_uid_field) {
