@@ -1285,20 +1285,20 @@ function fetchit_get_existing_selection_nid (&$db_handle,&$db_type,$nid) {
 	if ($db_handle) {
 		if ($db_type) {
 			if ($nid) {
-				$record_select = fetchit_get_cck_val(F_DR_RECORD_SELECT_TBL,F_DR_RECORD_SELECT_FLD,F_DR_NID_FLD,$nid);
+				$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
 				switch ($record_select) {
 					case 0: // static html - no selection - do nothing
 						break;
 					case 1: // radio button record selection
-						$record_select_table = trim(fetchit_get_cck_val(F_DR_RECORD_SELECT_TABLE_TBL,F_DR_RECORD_SELECT_TABLE_FLD,F_DR_NID_FLD,$nid));
-						$key_field = trim(fetchit_get_cck_val(F_DR_CONTENT_KEYFLD_TBL,F_DR_CONTENT_KEYFLD_FLD,F_DR_NID_FLD,$nid));
-						$user_uid_field = trim(fetchit_get_cck_val(F_DR_CONTENT_UID_TBL,F_DR_CONTENT_UID_FLD,F_DR_NID_FLD,$nid));
+						$record_select_table = trim(fetchit_get_cck_val(F2_D7_CTYPE_RECTBL_TBL,F2_D7_CTYPE_RECTBL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
+						$key_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_KEYFLD_TBL,F2_D7_CTYPE_KEYFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
+						$user_uid_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_UIDFLD_TBL,F2_D7_CTYPE_UIDFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
 						$result = fetchit_get_existing_selection_single($db_handle,$db_type,$record_select_table,$key_field,$user_uid_field); 
 						return $result;
 					case 2: // check boxes button record selection
-						$record_select_table = trim(fetchit_get_cck_val(F_DR_RECORD_SELECT_TABLE_TBL,F_DR_RECORD_SELECT_TABLE_FLD,F_DR_NID_FLD,$nid));
-						$key_field = trim(fetchit_get_cck_val(F_DR_CONTENT_KEYFLD_TBL,F_DR_CONTENT_KEYFLD_FLD,F_DR_NID_FLD,$nid));
-						$user_uid_field = trim(fetchit_get_cck_val(F_DR_CONTENT_UID_TBL,F_DR_CONTENT_UID_FLD,F_DR_NID_FLD,$nid));
+						$record_select_table = trim(fetchit_get_cck_val(F2_D7_CTYPE_RECTBL_TBL,F2_D7_CTYPE_RECTBL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
+						$key_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_KEYFLD_TBL,F2_D7_CTYPE_KEYFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
+						$user_uid_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_UIDFLD_TBL,F2_D7_CTYPE_UIDFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
 						$result = fetchit_get_existing_selection_multiple($db_handle,$db_type,$record_select_table,$key_field,$user_uid_field); 
 						return $result;
 					default:
@@ -1449,8 +1449,6 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	$field_names = fetchit_get_field_names($err,$db_type,$db_data_object);
 	$field_types = array();
 	$field_types = fetchit_get_field_types($err,$db_type,$db_data_object);
-	//for debugging only:
-	return $form;
 	//the following could be a single value or an array of values
 	$existing_selections = fetchit_get_existing_selection_nid($db_handle,$db_type,$nid);
 	switch ($record_select) {
@@ -1589,7 +1587,7 @@ function theme_fetchit_table_html_form_builder($form) {
     //define table header
     //$fieldset_name = $form['fieldset_name']['#value'];
 	$nid = $form['nid']['#value'];
-	$record_select = fetchit_get_cck_val(F_DR_RECORD_SELECT_TBL,F_DR_RECORD_SELECT_FLD,F_DR_NID_FLD,$nid);
+	$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
 	$field_count = $form['field_count']['#value'];
     $row_count = $form['row_count']['#value'];
 	$header = array();
