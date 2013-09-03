@@ -1449,7 +1449,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	}
 	//drupal_set_message("jim: debugging: fetchit_html_form_builder: got view name.");
 	
-	$form['#theme'] = 'fetchit_table_html_form_builder';
+	//$form['#theme'] = 'fetchit_table_html_form_builder';
 	$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
 	$user_uid_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_UIDFLD_TBL,F2_D7_CTYPE_UIDFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
 	$key_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_KEYFLD_TBL,F2_D7_CTYPE_KEYFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
