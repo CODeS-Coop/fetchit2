@@ -734,8 +734,8 @@ function getFetchitContent($type, $nid, $dest) {
 		switch ($type) {
 			case F_DR_TYPE_HTML_TABLE_NDX: //html table
 				//$output .= "blahblahblah a table goes here blahblahblah";
-				$output .= drupal_render_children(drupal_get_form('fetchit_table_html_form_'.$nid,$nid));
-				//$output .= drupal_get_form('fetchit_table_html_form_'.$nid,$nid);
+				//$output .= drupal_render_children(drupal_get_form('fetchit_table_html_form_'.$nid,$nid));
+				$output .= drupal_get_form('fetchit_table_html_form_'.$nid,$nid);
 				//$output .= drupal_get_form('fetchit_table_html_test_form_builder',$nid);
 				break;
 			case F_DR_TYPE_GVIZ_NDX: //gviz
@@ -1347,12 +1347,21 @@ function fetchit_set_existing_selection_nid (&$db_handle,&$db_type,$nid,$val) {
 //function fetchit_table_html_form_builder(&$form_state,$form_id,$args) {
 //function fetchit_table_html_form_builder($form,&$form_state,$args) {
 function fetchit_table_html_form_builder($form,&$form_state) {
-	//get the extra arg passed into the form builder function
-	$nid = $form_state['build_info']['args'][0];
 	//for debugging only:
-	$form['nid'] = array('#type' => 'markup','#value' => "XXXXXXXXXXX");
+	$form['customization']['check_in'] = array(
+			'#title' => t("Check in"),
+			'#type' => 'select',
+			'#options' => array(
+					'one' => 'Option 1',
+					'two' => 'Option 2',
+					'three' => 'Option 3',
+			)
+	);
 	return $form;
 	
+	
+	//get the extra arg passed into the form builder function
+	$nid = $form_state['build_info']['args'][0];
 	$form['nid'] = array('#type' => 'value','#value' => $nid);
 	/*
 	 * create the form fieldset
@@ -1604,8 +1613,8 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 function theme_fetchit_table_html_form_builder($form) {
 	drupal_set_message("jim: debugging: theme_fetchit_table_html_form_builder: started.");
 	//for debugging only:
-	//$output = drupal_render_children($form);
-	$output = $form;
+	$output = drupal_render_children($form);
+	//$output = $form;
 	return $output;
 	
 	
