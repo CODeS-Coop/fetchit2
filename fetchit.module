@@ -734,8 +734,8 @@ function getFetchitContent($type, $nid, $dest) {
 		switch ($type) {
 			case F_DR_TYPE_HTML_TABLE_NDX: //html table
 				//$output .= "blahblahblah a table goes here blahblahblah";
-				//$output .= drupal_render_children(drupal_get_form('fetchit_table_html_form_'.$nid,$nid));
-				$output .= drupal_get_form('fetchit_table_html_form_'.$nid,$nid);
+				$output .= drupal_render_children(drupal_get_form('fetchit_table_html_form_'.$nid,$nid));
+				//$output .= drupal_get_form('fetchit_table_html_form_'.$nid,$nid);
 				//$output .= drupal_get_form('fetchit_table_html_test_form_builder',$nid);
 				break;
 			case F_DR_TYPE_GVIZ_NDX: //gviz
@@ -1398,7 +1398,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	$db_type = fetchit_get_db_type($err,$nid);
 	//drupal_set_message("jhb debugging: nid $nid db_type = $db_type");
 	if($db_type) {
-		$form['db_type'] = array('#type' => 'value','#value' => $db_type);
+		//$form['db_type'] = array('#type' => 'value','#value' => $db_type);
 	} else {
 		$err = 1;
 		drupal_set_message("An error occurred when accessing the database type. Error number $err :".getFetchitErrorMsg($err));
@@ -1407,7 +1407,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	// get database handle and store it in the form object
 	if ($db_handle = fetchit_get_db_handle($err,$nid)) {
 		//drupal_set_message("jim: debugging: fetchit_html_form_builder: successfully created handle.");
-		$form['db_handle'] = array('#type' => 'value','#value' => $db_handle);
+		//$form['db_handle'] = array('#type' => 'value','#value' => $db_handle);
 	} else {
 		drupal_set_message("An error occurred when creating the database connection.");
 		if ($err) drupal_set_message("Error number $err :".getFetchitErrorMsg($err));
@@ -1441,7 +1441,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	 * were initially working for pg only
 	 */
 	if(strlen(trim($view_name = fetchit_get_cck_val(F2_D7_CTYPE_VIEWNM_TBL,F2_D7_CTYPE_VIEWNM_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
-		$form['view_name'] = array('#type' => 'value','#value' => $view_name);
+		//$form['view_name'] = array('#type' => 'value','#value' => $view_name);
 	} else {
 		$err=8;
 		drupal_set_message("An error occurred when accessing the table/view name. Error number $err :".getFetchitErrorMsg($err));
@@ -1449,7 +1449,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	}
 	//drupal_set_message("jim: debugging: fetchit_html_form_builder: got view name.");
 	
-	$form['#theme'] = 'fetchit_table_html_form_builder';
+	//$form['#theme'] = 'fetchit_table_html_form_builder';
 	$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
 	$user_uid_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_UIDFLD_TBL,F2_D7_CTYPE_UIDFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
 	$key_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_KEYFLD_TBL,F2_D7_CTYPE_KEYFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
@@ -1459,8 +1459,8 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	$row_count = fetchit_get_row_count($err,$db_type,$db_data_object);
 	//drupal_set_message("jim: debugging: fetchit_html_form_builder: created metadata for table.");
 	
-	$form['field_count'] = array('#type' => 'value','#value' => $field_count);
-	$form['row_count'] = array('#type' => 'value','#value' => $row_count);
+	//$form['field_count'] = array('#type' => 'value','#value' => $field_count);
+	//$form['row_count'] = array('#type' => 'value','#value' => $row_count);
 	$field_names = array();
 	$field_names = fetchit_get_field_names($err,$db_type,$db_data_object);
 	$field_types = array();
@@ -1496,6 +1496,26 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 		default:
 	}
 	//drupal_set_message("jim: debugging: fetchit_html_form_builder: handled record select.");
+	// create table here instead of in theme function
+	$header = array();
+	for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
+		$header[] = $field_names[$field_ndx];
+	}
+	$rows = array();
+	for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
+		$row=array();
+		for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
+			$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
+			$row[]=$db_value;
+		}
+		$rows[] = $row;
+	}
+	$form['htmltable'] = array(
+			'#theme' => 'table',
+			'#header' => $header,
+			'#rows' => $rows,
+			);
+	return $form;
 	
 	for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
 		$type = 'markup';
