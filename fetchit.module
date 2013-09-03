@@ -1434,14 +1434,14 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 		drupal_set_message("An error occurred when accessing the table/view name. Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
-	//for debugging only:
-	return $form;
 	
 	$form['#theme'] = 'fetchit_table_html_form_builder';
-	$record_select = fetchit_get_cck_val(F_DR_RECORD_SELECT_TBL,F_DR_RECORD_SELECT_FLD,F_DR_NID_FLD,$nid);
-	$user_uid_field = trim(fetchit_get_cck_val(F_DR_CONTENT_UID_TBL,F_DR_CONTENT_UID_FLD,F_DR_NID_FLD,$nid));
-	$key_field = trim(fetchit_get_cck_val(F_DR_CONTENT_KEYFLD_TBL,F_DR_CONTENT_KEYFLD_FLD,F_DR_NID_FLD,$nid));
-	$submit_label = trim(fetchit_get_cck_val(F_DR_CONTENT_SUBMIT_LABEL_TBL,F_DR_CONTENT_SUBMIT_LABEL_FLD,F_DR_NID_FLD,$nid));
+	$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
+	$user_uid_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_UIDFLD_TBL,F2_D7_CTYPE_UIDFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
+	$key_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_KEYFLD_TBL,F2_D7_CTYPE_KEYFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
+	$submit_label = trim(fetchit_get_cck_val(F2_D7_CTYPE_SUBLBL_TBL,F2_D7_CTYPE_SUBLBL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
+	//for debugging only:
+	return $form;
 	$db_data_object = fetchit_get_data_object($err,$db_type,$db_handle,$view_name,$user_uid_field);
 	$field_count = fetchit_get_field_count($err,$db_type,$db_data_object);
 	$row_count = fetchit_get_row_count($err,$db_type,$db_data_object);
