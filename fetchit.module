@@ -1473,16 +1473,12 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 			$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
 			$row[]=$db_value;
 		}
-		$row[] = drupal_render(array(
+		$element = array(
 					'#title' => t("Check in"),
 					'#type' => 'select',
-					'#options' => array(
-						'one' => 'Option 1',
-						'two' => 'Option 2',
-						'three' => 'Option 3',
-						),
-					)
-				);
+					'#options' => array('one' => 'Option 1','two' => 'Option 2','three' => 'Option 3'),
+					); 
+		$row[] = drupal_render($element);
 		$rows[] = $row;
 	}
 	$form['htmltable'] = array(
