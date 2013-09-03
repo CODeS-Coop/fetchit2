@@ -1350,7 +1350,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	$nid = $form_state['build_info']['args'][0];
 	//for debugging only:
 	$form['nid'] = array('#type' => 'markup','#value' => $nid);
-	return drupal_render($form);
+	return $form;
 	
 	$form['nid'] = array('#type' => 'value','#value' => $nid);
 	/*
