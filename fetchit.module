@@ -1527,7 +1527,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 				$column_count = 0;
 				for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
 					$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
-					drupal_set_message("\$row_ndx $row_ndx \$field_ndx $field_ndx \$db_value $db_value");
+					//drupal_set_message("\$row_ndx $row_ndx \$field_ndx $field_ndx \$db_value $db_value");
 					if ($field_ndx == ($uid_field_ndx-1) ) {
 						// don't do anything with this value
 					} else {
@@ -1813,6 +1813,8 @@ function theme_fetchit_table_html_form_builder($variables) {
 }
 function fetchit_table_html_validate($form, $form_state) {
 	$nid = $form['nid']['#value'];
+	form_set_error('submit',t("fetchit setup error: nid = $nid"));
+	return;
 	//$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
 	$record_select = $form['record_select']['#value'];
 	switch ($record_select) {
