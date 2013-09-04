@@ -1567,8 +1567,8 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 					'#type' => 'submit',
 					'#value' => t($submit_label),
 			);
-			$build['#validate'][] = 'fetchit_table_html_validate';
-			$build['#submit'][] = 'fetchit_table_html_submit';
+			$build[$element_name]['#validate'][] = 'fetchit_table_html_validate';
+			$build[$element_name]['#submit'][] = 'fetchit_table_html_submit';
 			break;
 		case 2: // multiple row selection via checkboxes
 			// create the HTML tableselect header and options
@@ -1617,6 +1617,8 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 					'#type' => 'submit',
 					'#value' => t($submit_label),
 			);
+			$build[$element_name]['#validate'][] = 'fetchit_table_html_validate';
+			$build[$element_name]['#submit'][] = 'fetchit_table_html_submit';
 			$build['#validate'][] = 'fetchit_table_html_validate';
 			$build['#submit'][] = 'fetchit_table_html_submit';
 			break;
@@ -1667,6 +1669,8 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 					'#type' => 'submit',
 					'#value' => t($submit_label),
 			);
+			$build[$element_name]['#validate'][] = 'fetchit_table_html_validate';
+			$build[$element_name]['#submit'][] = 'fetchit_table_html_submit';
 			$build['#validate'][] = 'fetchit_table_html_validate';
 			$build['#submit'][] = 'fetchit_table_html_submit';
 			break;
