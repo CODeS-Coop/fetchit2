@@ -1584,7 +1584,6 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	/*
 	 * create the radio/checkboxes render arrays
 	 */
-	/*
 	switch ($record_select) {
 		case 0:
 			break;
@@ -1614,7 +1613,6 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 			break;
 		default:
 	}
-	*/
 	/*
 	 * now finish creating the table rows and make an output HTML table
 	 * here is where it gets tricky...put PARTS of Drupal 7 elements
@@ -1631,7 +1629,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 			case 0: // nope
 				break;
 			case 1: // yes, a single radio button render array goes here 
-				row[] = array(
+				$row[] = array(
 							'#type' => 'radio',
 							'#returns' => $row_ndx+1,
 							'#attributes' => 'selectionradios',
@@ -1640,9 +1638,21 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 				break;
 			case 2: // yes, a single checkbox goes here
 				//row[] = drupal_render($nobuild['processedcheckboxes'][$row_ndx+1]); // does this really work?!?  too cool!
+				$row[] = array(
+							'#type' => 'checkbox',
+							'#returns' => $row_ndx+1,
+							'#attributes' => 'selectioncheckboxes',
+							'#default_value' => 0,
+						);
 				break;
 			case 3: //yes, a single checkbox goes here
 				//row[] = drupal_render($nobuild['processedcheckboxes'][$row_ndx+1]); // does this really work?!?  too cool!
+				$row[] = array(
+							'#type' => 'checkbox',
+							'#returns' => $row_ndx+1,
+							'#attributes' => 'selectioncheckboxes',
+							'#default_value' => 0,
+						);
 				break;
 			default:
 		}
