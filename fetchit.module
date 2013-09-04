@@ -1531,8 +1531,8 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	 * note there is data in the CCK tables that can be queried later too
 	 * as long as the nid is known
 	 */
-	$uid_field = 0;
-	$key_field = 0;
+	$uid_field_ndx = 0;
+	$key_field_ndx = 0;
 	for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) { // loop over the source table fields
 		if ( $field_names[$field_ndx] == $user_uid_field ) {
 			// save it as a 1-based field index but do not create an output table column
