@@ -1345,9 +1345,26 @@ function fetchit_set_existing_selection_nid (&$db_handle,&$db_type,$nid,$val) {
  * (with optional radio and checkbox column to make it a selection form)
  */
 function fetchit_table_html_form_builder($form,&$form_state) {
-	//get the extra arg passed into the form builder function
+	/*
+	 * create the render arrays needed
+	 * the table, ofcourse, but also perhaps radio or checkboxes and submit buttons, titles, pre and post HTML markup, etc.
+	 * the contents of the table cells will be values, but also might be rendered drupal elements (controls)
+	 * since I have not figured out how to leave them as arrays and have them rendered correctly at the
+	 * end (yet?...)
+	 * 
+	 * use an array named build for the parts that will stay "unrendered" when exiting this function
+	 * use an array named nobuild for the parts that be rendered into HTML before leaving this function
+	 */
+	$build = array();
+	$nobuild = array();
+	/*
+	 * get the extra arg, nid, passed into the form builder function
+	 * and stored in the form_state array
+	 * put it in the render array as a non-displayed value
+	 * this is a convenient way to pass args to the form validate and submit functions
+	 */
 	$nid = $form_state['build_info']['args'][0];
-	$form['nid'] = array('#type' => 'value','#value' => $nid);
+	$build['nid'] = array('#type' => 'value','#value' => $nid);
 	/*
 	 * create the form fieldset
 	 */
@@ -1382,16 +1399,20 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	 * leave it in render array form
 	 */
 	// get database type
-	if(!$db_type = fetchit_get_db_type($err,$nid)) {
+	if($db_type = fetchit_get_db_type($err,$nid)) {
+		$build['db_type'] = array('#type' => 'value','#value' => $db_type);
+	} else {
 		$err = 1;
 		drupal_set_message("An error occurred when accessing the database type. Error number $err :".getFetchitErrorMsg($err));
-		return $form;
+		return $build;
 	}
 	// get database handle
-	if (!$db_handle = fetchit_get_db_handle($err,$nid)) {
+	if ($db_handle = fetchit_get_db_handle($err,$nid)) {
+		$build['db_handle'] = array('#type' => 'value','#value' => $db_handle);
+	} else {
 		drupal_set_message("An error occurred when creating the database connection.");
 		if ($err) drupal_set_message("Error number $err :".getFetchitErrorMsg($err));
-		return $form;
+		return $build;
 	}
 	/*
 	 * run the pre query
@@ -1410,23 +1431,35 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	/*
 	 * get the table's data, then get the field count, field names and field types
 	 */
-	if(!strlen(trim($view_name = fetchit_get_cck_val(F2_D7_CTYPE_VIEWNM_TBL,F2_D7_CTYPE_VIEWNM_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
+	if(strlen(trim($view_name = fetchit_get_cck_val(F2_D7_CTYPE_VIEWNM_TBL,F2_D7_CTYPE_VIEWNM_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
+		$build['view_name'] = array('#type' => 'value','#value' => $view_name);
+	} else {
 		$err=8;
 		drupal_set_message("An error occurred when accessing the table/view name. Error number $err :".getFetchitErrorMsg($err));
-		return $form;
+		return $build;
 	}
 	/*
-	 * for now do not theme this form
-	 * $form['#theme'] = 'fetchit_table_html_form_builder';
-	 * get table metadata
+	 * for now ...do not theme this form
+	 */
+	// $build['#theme'] = 'fetchit_table_html_form_builder';
+	/*
+	 * get the output table metadata
+	 * save it in non displayed form render array values
+	 * need to add more error checking here, watching for nulls
 	 */
 	$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
+	$build['record_select'] = array('#type' => 'value','#value' => $record_select);
 	$user_uid_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_UIDFLD_TBL,F2_D7_CTYPE_UIDFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
+	$build['user_uid_field'] = array('#type' => 'value','#value' => $user_uid_field);
 	$key_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_KEYFLD_TBL,F2_D7_CTYPE_KEYFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
+	$build['key_field'] = array('#type' => 'value','#value' => $key_field);
 	$submit_label = trim(fetchit_get_cck_val(F2_D7_CTYPE_SUBLBL_TBL,F2_D7_CTYPE_SUBLBL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
+	$build['submit_label'] = array('#type' => 'value','#value' => $submit_label);
 	$db_data_object = fetchit_get_data_object($err,$db_type,$db_handle,$view_name,$user_uid_field);
 	$field_count = fetchit_get_field_count($err,$db_type,$db_data_object);
+	$build['field_count'] = array('#type' => 'value','#value' => $field_count);
 	$row_count = fetchit_get_row_count($err,$db_type,$db_data_object);
+	$build['row_count'] = array('#type' => 'value','#value' => $row_count);
 	
 	$field_names = array();
 	$field_names = fetchit_get_field_names($err,$db_type,$db_data_object);
@@ -1470,7 +1503,6 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 			break;
 		default:
 	}
-
 	/* 
 	 * create header record for table
 	 * if record selection is enabled, then add an extra column at the beginning of the table
@@ -1495,18 +1527,22 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	 * loop through the fields and determine if they are either a key field or a drupal user id field
 	 * because these are not displayed in the table.
 	 * However, the key field is used in record selection, and the
-	 * drupal user id field is used in queries.
+	 * drupal user id field is potentially used in queries.
+	 * note there is data in the CCK tables that can be queried later too
+	 * as long as the nid is known
 	 */
 	$uid_field = 0;
 	$key_field = 0;
 	for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) { // loop over the source table fields
 		if ( $field_names[$field_ndx] == $user_uid_field ) {
 			// save it as a 1-based field index but do not create an output table column
-			$uid_field = $field_ndx + 1;
+			$uid_field_ndx = $field_ndx + 1;
+			$build['uid_field_ndx'] = array('#type' => 'value','#value' => $uid_field_ndx);
 		} else {
 			if ( $field_names[$field_ndx] == $key_field ) {
 				// save it as a 1-based field index but do not create an output table column
-				$key_field = $field_ndx + 1;
+				$key_field_ndx = $field_ndx + 1;
+				$build['key_field_ndx'] = array('#type' => 'value','#value' => $key_field_ndx);
 				/*
 				 * since this is the key field,
 				 * $existing_selection / $existing_selections[] (values are key field values)
@@ -1553,7 +1589,6 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	 * end (yet?...)
 	 * 
 	 * use an array named build for the parts that will stay "unrendered"
-	 * 
 	 * use an array named nobuild for the parts that be rendered into HTML before leaving this function
 	 */
 	$build = array();
@@ -1589,201 +1624,100 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	}
 	/*
 	 * now finish creating the table rows and make an output HTML table
-	 * here is where it gets tricky...put rendered (?) Drupal 7 elements in the
-	 * table cells
+	 * here is where it gets tricky...put rendered (?) PARTS of Drupal 7 elements
+	 * (radio buttons and checckboxes) into the table cells
 	 */
 	$rows = array();
 	for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
 		$row=array();
 		/*
 		 * figure out if we to insert an extra column for record selection before the data columns
+		 * note the 1 based radio and checkbox index - double check this!!
 		 */
 		switch ($record_select) {
 			case 0: // nope
 				break;
 			case 1: // yes, a single radio button goes here
-				row[] = drupal_render($nobuild['radios'][$row_ndx]); // does this really work?!?  too cool!
+				row[] = drupal_render($nobuild['radios'] [$row_ndx+1]); // does this really work?!?  too cool!
 				break;
-			case 2:
-				row[] = drupal_render($nobuild['checkboxes'] [$row_ndx]); // does this really work?!?  too cool!
+			case 2: // yes, a single checkbox goes here
+				row[] = drupal_render($nobuild['checkboxes'] [$row_ndx+1]); // does this really work?!?  too cool!
 				break;
-			case 3:
-				row[] = drupal_render($nobuild['checkboxes'] [$row_ndx]); // does this really work?!?  too cool!
+			case 3: //yes, a single checkbox goes here
+				row[] = drupal_render($nobuild['checkboxes'] [$row_ndx+1]); // does this really work?!?  too cool!
 				break;
 			default:
 		}
-		
+		/*
+		 * now add the normal field values (not key or uid)
+		 */
 		for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
-			//first figure out if this is a selected row
-			//then
-			$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
-			$row[]=$db_value;
+			if ($field_ndx != ($uid_field_ndx-1) ) {
+				if ($field_ndx != ($key_field_ndx-1)) {
+					$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
+					$row[]=$db_value;
+				}
+			}
 		}
 		$rows[] = $row;
 	}
+	/*
+	 * create the HTML table render array
+	 */
 	$build['htmltable'] = array(
 			'#theme' => 'table',
 			'#header' => $header,
 			'#rows' => $rows,
 	);
-	
 	/*
-	 * finally create the submit buttons with the necessary functions
+	 * finally create the submit button render array with the necessary validate and submit functions defined
 	 */
-	
-	//first get the selected values if necessary
-	
-	//create the table values
-	$rows = array();
-	for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
-		$row=array();
-		for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
-			//first figure out if this is a selected row
-			//then 
-			$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
-			$row[]=$db_value;
-		}
-		$rows[] = $row;
-	}
-	$form['htmltable'] = array(
-			'#theme' => 'table',
-			'#header' => $header,
-			'#rows' => $rows,
-			);
-	return $form;
-	
-	
-	//$element = array(
-	//			'#title' => t("Check in"),
-	//			'#type' => 'select',
-	//			'#options' => array('one' => 'Option 1','two' => 'Option 2','three' => 'Option 3'),
-	//			);
-	//$row[] = drupal_render($element);
-	
-	
-
-	for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
-		$type = 'markup';
-		if ( $field_names[$field_ndx] == $user_uid_field) {
-			$type = 'value';
-			$form['uid_field_ndx'] = array('#type' => 'value','#value' => ($field_ndx+1) );
-			$uid_field_now = TRUE; 
-		} else {
-			$uid_field_now = FALSE;
-		}
-		if ( $field_names[$field_ndx] == $key_field ) {
-			$type = 'value';
-			$form['key_field_ndx'] = array('#type' => 'value','#value' => ($field_ndx+1) );
-			$key_field_now = TRUE; 
-		} else {
-			$key_field_now = FALSE; 
-		}
-		$form['field_names'][$field_ndx] = array('#type' => 'value','#value' => $field_names[$field_ndx]);
-		$form['field_types'][$field_ndx] = array('#type' => 'value','#value' => $field_types[$field_ndx]);
-		for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
-			$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
-			$form['data'][$row_ndx][$field_ndx] = array('#type' => $type,'#value' => $db_value);
-			// here is where we rebuild the last selected values and mark them as the defaults...
-			if ($key_field_now) {
-				switch ($record_select) {
-					case 0:
-						break;
-					case 1:
-						if ($db_value == $existing_selections) {
-							$default_value = $row_ndx + 1;
-						}
-						break;
-					case 2:
-						foreach($existing_selections as $existing_selection) {
-							if ($db_value == $existing_selection) {
-								$default_values[] = $row_ndx + 1;
-							}
-						}
-						break;
-					case 3: //the defaults for deletion are none selected
-						break;
-					default:
-				}
-			}
-		}
-	}
-	//drupal_set_message("jim: debugging: fetchit_html_form_builder: created table content.");
-	
 	switch ($record_select) {
 		case 0:
 			break;
 		case 1:
-			$form['radios'] = array('#type' => 'radios','#options' => $options,'#default_value' => $default_value);
-			/*
-			 * add a submit button
-			 */
 			if (!strlen(trim($submit_label))) $submit_label="Submit";
 			$element_name = "submit_$nid";
-			$form[$element_name] = array(
-				'#type' => 'submit',
-				'#value' => t($submit_label),
+			$build[$element_name] = array(
+					'#type' => 'submit',
+					'#value' => t($submit_label),
 			);
-			/*
-			 * establish the validate and submit functions to use
-			 */
-			$form['#validate'][] = 'fetchit_table_html_validate';
-			$form['#submit'][] = 'fetchit_table_html_submit';
+			$build['#validate'][] = 'fetchit_table_html_validate';
+			$build['#submit'][] = 'fetchit_table_html_submit';
 			break;
 		case 2:
-			$form['checkboxes'] = array('#type' => 'checkboxes','#options' => $options,'#default_value' => $default_values);
-			/*
-			 * add a submit button
-			 */
 			if (!strlen(trim($submit_label))) $submit_label="Submit";
 			$element_name = "submit_$nid";
-			$form[$element_name] = array(
-				'#type' => 'submit',
-				'#value' => t($submit_label),
+			$build[$element_name] = array(
+					'#type' => 'submit',
+					'#value' => t($submit_label),
 			);
-			/*
-			 * establish the validate and submit functions to use
-			 */
-			$form['#validate'][] = 'fetchit_table_html_validate';
-			$form['#submit'][] = 'fetchit_table_html_submit';
+			$build['#validate'][] = 'fetchit_table_html_validate';
+			$build['#submit'][] = 'fetchit_table_html_submit';
 			break;
 		case 3:
-			$form['checkboxes'] = array('#type' => 'checkboxes','#options' => $options,'#default_value' => $default_values);
-			/*
-			 * add a submit button
-			 */
 			if (!strlen(trim($submit_label))) $submit_label="Delete";
 			$element_name = "submit_$nid";
-			$form[$element_name] = array(
-				'#type' => 'submit',
-				'#value' => t($submit_label),
+			$build[$element_name] = array(
+					'#type' => 'submit',
+					'#value' => t($submit_label),
 			);
-			/*
-			 * establish the validate and submit functions to use
-			 */
-			$form['#validate'][] = 'fetchit_table_html_validate';
-			$form['#submit'][] = 'fetchit_table_html_submit';
+			$build['#validate'][] = 'fetchit_table_html_validate';
+			$build['#submit'][] = 'fetchit_table_html_submit';
 			break;
-			default:
+		default:
 	}
-	//drupal_set_message("jim: debugging: fetchit_html_form_builder: finished.");
-	
-	return $form;
+	return $build;
 }
 /*
- * theme the html table form with checkboxes
+ * theme the html table form
+ * not able to get D7 to use this
+ * so comment it out for now
  */
-//function theme_fetchit_table_html_form_builder($form) {
+/*
 function theme_fetchit_table_html_form_builder($form) {
-	drupal_set_message("jim: debugging: theme_fetchit_table_html_form_builder: started.");
-	//for debugging only:
-	$output = drupal_render_children($form);
-	//$output = $form;
-	return $output;
-	
-	
 	//define table header
     //$fieldset_name = $form['fieldset_name']['#value'];
-
 	$nid = $form['nid']['#value'];
 	$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
 	$field_count = $form['field_count']['#value'];
@@ -1847,6 +1781,7 @@ function theme_fetchit_table_html_form_builder($form) {
 	$output .= drupal_render($form);
 	return $output;
 }
+*/
 function fetchit_table_html_validate($form, &$form_state) {
 	$nid = $form['nid']['#value'];
 	$record_select = fetchit_get_cck_val(F_DR_RECORD_SELECT_TBL,F_DR_RECORD_SELECT_FLD,F_DR_NID_FLD,$nid);
