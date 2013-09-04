@@ -1632,8 +1632,9 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 				$radioname = 'radio'.($row_ndx+1);
 				$nobuild[$radioname] = array(
 							'#type' => 'radio',
+							'#title' => 'xxx',
 							'#return_value' => $row_ndx+1,
-							'#attributes' => 'selectionradios',
+							//'#attributes' => 'selectionradios',
 							'#default_value' => 0,
 						);
 				$row[] = drupal_render($nobuild[$radioname]);
