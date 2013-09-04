@@ -1634,10 +1634,10 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 							'#type' => 'radio',
 							'#title' => 'xxx',
 							'#return_value' => $row_ndx+1,
-							//'#attributes' => 'selectionradios',
+							'#attributes' => 'selectionradios',
 							'#default_value' => 0,
 						);
-				$row[] = drupal_render($nobuild[$radioname]);
+				$row[] = $nobuild[$radioname];
 				//$row[] = drupal_render($nobuild['selectionradios'][$row_ndx+1]);
 				//$row[] = array(
 				//			'#type' => 'radio',
@@ -1729,11 +1729,14 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 }
 /*
  * theme the html table form
- * not able to get D7 to use this
- * so comment it out for now
  */
-/*
-function theme_fetchit_table_html_form_builder($form) {
+function theme_fetchit_table_html_form_builder($variables) {
+	$form = $variables['form'];
+	$nid = $form['nid']['#value'];
+	drupal_set_message("theme_fetchit_table_html_form_builder.  hi, jim.  the nid is $nid");
+	$output = drupal_render_children($form);
+	return $output;
+	/*
 	//define table header
     //$fieldset_name = $form['fieldset_name']['#value'];
 	$nid = $form['nid']['#value'];
@@ -1798,8 +1801,8 @@ function theme_fetchit_table_html_form_builder($form) {
     $output .= theme('table', $header, $rows);
 	$output .= drupal_render($form);
 	return $output;
-}
 */
+}
 function fetchit_table_html_validate($form, &$form_state) {
 	$nid = $form['nid']['#value'];
 	$record_select = fetchit_get_cck_val(F_DR_RECORD_SELECT_TBL,F_DR_RECORD_SELECT_FLD,F_DR_NID_FLD,$nid);
