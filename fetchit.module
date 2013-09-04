@@ -1593,7 +1593,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 				'#options' => $options,
 				'#default_value' => $default_value,
 			);
-			$nobuild['processedradios'] = form_process_radios($nobuild['selectionradios']);
+			//$nobuild['processedradios'] = form_process_radios($nobuild['selectionradios']);
 			break;
 		case 2:
 			$nobuild['selectioncheckboxes'] = array(
@@ -1601,7 +1601,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 				'#options' => $options,
 				'#default_value' => $default_values,
 			);
-			$nobuild['processedcheckboxes'] = form_process_checkboxes($nobuild['selectioncheckboxes']);
+			//$nobuild['processedcheckboxes'] = form_process_checkboxes($nobuild['selectioncheckboxes']);
 			break;
 		case 3:
 			$nobuild['selectioncheckboxes'] = array(
@@ -1609,7 +1609,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 				'#options' => $options,
 				'#default_value' => $default_values,
 			);
-			$nobuild['processedcheckboxes'] = form_process_checkboxes($nobuild['selectioncheckboxes']);
+			//$nobuild['processedcheckboxes'] = form_process_checkboxes($nobuild['selectioncheckboxes']);
 			break;
 		default:
 	}
@@ -1628,13 +1628,14 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 		switch ($record_select) {
 			case 0: // nope
 				break;
-			case 1: // yes, a single radio button render array goes here 
-				$row[] = array(
-							'#type' => 'radio',
-							'#returns' => $row_ndx+1,
-							'#attributes' => 'selectionradios',
-							'#default_value' => 0,
-						);
+			case 1: // yes, a single radio button render array goes here
+				$row[] = drupal_render($nobuild['selectionradios'][$row_ndx+1]);
+				//$row[] = array(
+				//			'#type' => 'radio',
+				//			'#returns' => $row_ndx+1,
+				//			'#attributes' => 'selectionradios',
+				//			'#default_value' => 0,
+				//		);
 				break;
 			case 2: // yes, a single checkbox goes here
 				//row[] = drupal_render($nobuild['processedcheckboxes'][$row_ndx+1]); // does this really work?!?  too cool!
