@@ -1632,7 +1632,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 				$radioname = 'radio'.($row_ndx+1);
 				$nobuild[$radioname] = array(
 							'#type' => 'radio',
-							'#returns' => $row_ndx+1,
+							'#return_value' => $row_ndx+1,
 							'#attributes' => 'selectionradios',
 							'#default_value' => 0,
 						);
