@@ -1588,25 +1588,28 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 		case 0:
 			break;
 		case 1:
-			$nobuild['radios'] = array(
+			$nobuild['selectionradios'] = array(
 				'#type' => 'radios',
 				'#options' => $options,
 				'#default_value' => $default_value,
 			);
+			$nobuild['processedradios'] = form_process_radios($nobuild['selectionradios']);
 			break;
 		case 2:
-			$nobuild['checkboxes'] = array(
+			$nobuild['selectioncheckboxes'] = array(
 				'#type' => 'checkboxes',
 				'#options' => $options,
 				'#default_value' => $default_values,
 			);
+			$nobuild['processedcheckboxes'] = form_process_checkboxes($nobuild['selectioncheckboxes']);
 			break;
 		case 3:
-			$nobuild['checkboxes'] = array(
+			$nobuild['selectioncheckboxes'] = array(
 				'#type' => 'checkboxes',
 				'#options' => $options,
 				'#default_value' => $default_values,
 			);
+			$nobuild['processedcheckboxes'] = form_process_checkboxes($nobuild['selectioncheckboxes']);
 			break;
 		default:
 	}
@@ -1625,14 +1628,14 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 		switch ($record_select) {
 			case 0: // nope
 				break;
-			case 1: // yes, a single radio button goes here
-				row[] = drupal_render($nobuild['radios'][$row_ndx+1]); // does this really work?!?  too cool!
+			case 1: // yes, a single radio button goes here 
+				row[] = drupal_render($nobuild['processedradios'][$row_ndx+1]); // does this really work?!?  too cool!
 				break;
 			case 2: // yes, a single checkbox goes here
-				row[] = drupal_render($nobuild['checkboxes'][$row_ndx+1]); // does this really work?!?  too cool!
+				row[] = drupal_render($nobuild['processedcheckboxes'][$row_ndx+1]); // does this really work?!?  too cool!
 				break;
 			case 3: //yes, a single checkbox goes here
-				row[] = drupal_render($nobuild['checkboxes'][$row_ndx+1]); // does this really work?!?  too cool!
+				row[] = drupal_render($nobuild['processedcheckboxes'][$row_ndx+1]); // does this really work?!?  too cool!
 				break;
 			default:
 		}
