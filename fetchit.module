@@ -1551,6 +1551,8 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 					'#header' => $header,
 					'#options' => $options,
 					'#multiple' => FALSE,
+					'#js_select' => TRUE,
+					'#empty' => ' Nothing to see here.  Move along, please.',
 			);
 			// now add the submit button and submit functions
 			if (!strlen(trim($submit_label))) $submit_label="Submit";
