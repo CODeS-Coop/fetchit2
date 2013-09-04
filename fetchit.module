@@ -1415,9 +1415,11 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 		drupal_set_message("An error occurred when accessing the table/view name. Error number $err :".getFetchitErrorMsg($err));
 		return $form;
 	}
-	//for now do not theme this form
-	//$form['#theme'] = 'fetchit_table_html_form_builder';
-	//get table metadata
+	/*
+	 * for now do not theme this form
+	 * $form['#theme'] = 'fetchit_table_html_form_builder';
+	 * get table metadata
+	 */
 	$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
 	$user_uid_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_UIDFLD_TBL,F2_D7_CTYPE_UIDFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
 	$key_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_KEYFLD_TBL,F2_D7_CTYPE_KEYFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
@@ -1430,28 +1432,36 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 	$field_names = fetchit_get_field_names($err,$db_type,$db_data_object);
 	$field_types = array();
 	$field_types = fetchit_get_field_types($err,$db_type,$db_data_object);
-	// existing record selections use the key field and a separate table containing selected key(s)
-	// could be a single value or an array of values
+	/*
+	 * existing record selections use the key field and a separate table containing selected key(s)
+	 * could be a single value or an array of values
+	 */
 	$existing_selections = fetchit_get_existing_selection_nid($db_handle,$db_type,$nid);
-	//set up the options and default values arrays needed for record selection
+	/*
+	 * set up the options and default values arrays needed for record selection
+	 * the options array is a bunch of zero length strings because we don't want labels
+	 * the individual radio buttons or checkboxes will be spread over the rows
+	 * in the first column representing individual rows even though they can also be addressed
+	 * as a single group entity
+	 */
 	switch ($record_select) {
-		case 0:
+		case 0: // no record selection
 			break;
-		case 1:
+		case 1: // single row selection via radio buttons
 			$options = array();
 			$default_value = 1;
 			for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
 				$options[$row_ndx+1] = '';
 			}
 			break;
-		case 2:
+		case 2: // multiple row selection via checkboxes
 			$options = array();
 			$default_values = array();
 			for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
 				$options[$row_ndx+1] = '';
 			}
 			break;
-		case 3:
+		case 3: // multiple row DELETION via checkboxes
 			$options = array();
 			$default_values = array();
 			for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
@@ -1461,39 +1471,166 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 		default:
 	}
 
-	// create table header
+	/* 
+	 * create header record for table
+	 * if record selection is enabled, then add an extra column at the beginning of the table
+	 * for the radio buttons or checkboxes
+	 */
 	$header = array();
-	//create extra column when record selection is enabled
 	switch ($record_select) {
-		case 0:
+		case 0: // no record selection
 			break;
-		case 1:
+		case 1: // single row selection via radio buttons
 			$header[] = 'Select:';
 			break;
-		case 2:
+		case 2: // multiple row selection via checkboxes
 			$header[] = 'Select:';
 			break;
-		case 3:
+		case 3: // multiple row DELETION via checkboxes
 			$header[] = 'Select:';
 			break;
 		default:
 	}
-	$uid_field = -1;
-	$key_field = -1;
-	for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
-		if ( $field_names[$field_ndx] == $user_uid_field) {
-			//save it but do not create a column
-			$uid_field = $field_ndx;
+	/*
+	 * loop through the fields and determine if they are either a key field or a drupal user id field
+	 * because these are not displayed in the table.
+	 * However, the key field is used in record selection, and the
+	 * drupal user id field is used in queries.
+	 */
+	$uid_field = 0;
+	$key_field = 0;
+	for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) { // loop over the source table fields
+		if ( $field_names[$field_ndx] == $user_uid_field ) {
+			// save it as a 1-based field index but do not create an output table column
+			$uid_field = $field_ndx + 1;
 		} else {
 			if ( $field_names[$field_ndx] == $key_field ) {
-				//save it but do not create a column
-				$key_field = $field_ndx;
+				// save it as a 1-based field index but do not create an output table column
+				$key_field = $field_ndx + 1;
+				/*
+				 * since this is the key field,
+				 * $existing_selection / $existing_selections[] (values are key field values)
+				 * are converted to $default_value / $default_values[] (values are 1-based row indices)
+				 */
+				switch ($record_select) {
+					case 0: // no selection, no default necessary
+						break;
+					case 1: // single selection, only one default value
+						for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
+							$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
+							if ($db_value == $existing_selections) {
+								$default_value = $row_ndx + 1;
+							}
+						}
+						break;
+					case 2: // multiple selection, multiple default values
+						for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
+							$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
+							foreach($existing_selections as $existing_selection) {
+								if ($db_value == $existing_selection) {
+									$default_values[] = $row_ndx + 1;
+								}
+							}
+						}
+						break;
+					case 3: // multiple deletion, the defaults are none selected
+						break;
+					default:
+				}
 			} else {
+				/*
+				 * this is a normal (not key or uid) field value that will be displayed in the output table
+				 */
 				$header[] = $field_names[$field_ndx];
 			}
 		}
 	}
-
+	/*
+	 * now create the actual render arrays needed
+	 * the table, ofcourse, but also perhaps radio or checkboxes and submit buttons, titles, pre and post HTML markup, etc.
+	 * the contents of the table cells will be values, but also might be rendered drupal elements (controls)
+	 * since I have not figured out how to leave them as arrays and have them rendered correctly at the
+	 * end (yet?...)
+	 * 
+	 * use an array named build for the parts that will stay "unrendered"
+	 * 
+	 * use an array named nobuild for the parts that be rendered into HTML before leaving this function
+	 */
+	$build = array();
+	$nobuild = array();
+	/*
+	 * first create the radio/checkboxes
+	 */
+	switch ($record_select) {
+		case 0:
+			break;
+		case 1:
+			$nobuild['radios'] = array(
+				'#type' => 'radios',
+				'#options' => $options,
+				'#default_value' => $default_value,
+			);
+			break;
+		case 2:
+			$nobuild['checkboxes'] = array(
+				'#type' => 'checkboxes',
+				'#options' => $options,
+				'#default_value' => $default_values,
+			);
+			break;
+		case 3:
+			$nobuild['checkboxes'] = array(
+				'#type' => 'checkboxes',
+				'#options' => $options,
+				'#default_value' => $default_values,
+			);
+			break;
+		default:
+	}
+	/*
+	 * now finish creating the table rows and make an output HTML table
+	 * here is where it gets tricky...put rendered (?) Drupal 7 elements in the
+	 * table cells
+	 */
+	$rows = array();
+	for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
+		$row=array();
+		/*
+		 * figure out if we to insert an extra column for record selection before the data columns
+		 */
+		switch ($record_select) {
+			case 0: // nope
+				break;
+			case 1: // yes, a single radio button goes here
+				row[] = drupal_render($nobuild['radios'][$row_ndx]); // does this really work?!?  too cool!
+				break;
+			case 2:
+				row[] = drupal_render($nobuild['checkboxes'] [$row_ndx]); // does this really work?!?  too cool!
+				break;
+			case 3:
+				row[] = drupal_render($nobuild['checkboxes'] [$row_ndx]); // does this really work?!?  too cool!
+				break;
+			default:
+		}
+		
+		for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
+			//first figure out if this is a selected row
+			//then
+			$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
+			$row[]=$db_value;
+		}
+		$rows[] = $row;
+	}
+	$build['htmltable'] = array(
+			'#theme' => 'table',
+			'#header' => $header,
+			'#rows' => $rows,
+	);
+	
+	/*
+	 * finally create the submit buttons with the necessary functions
+	 */
+	
 	//first get the selected values if necessary
 	
 	//create the table values
