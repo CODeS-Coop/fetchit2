@@ -1395,7 +1395,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 	/*
 	 * create the form fieldset
 	 */
-	/* BROKEN WHEN USING THEME FUNCTION...
+	/*
 	$fieldset_name = F_DR_HTML_BASENAME.$nid;
 	$form['fieldset_name'] = array('#type' => 'value','#value' => $fieldset_name);
 	$mytable = F_DR_CONTENT_TITLE_TBL;
@@ -1467,6 +1467,8 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 	}
 	$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
 	$build['record_select'] = array('#type' => 'value','#value' => $record_select);
+	$record_select_table = trim(fetchit_get_cck_val(F2_D7_CTYPE_RECTBL_TBL,F2_D7_CTYPE_RECTBL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
+	$build['record_select_table'] = array('#type' => 'value','#value' => $record_select_table);
 	$user_uid_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_UIDFLD_TBL,F2_D7_CTYPE_UIDFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
 	$build['user_uid_field'] = array('#type' => 'value','#value' => $user_uid_field);
 	$key_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_KEYFLD_TBL,F2_D7_CTYPE_KEYFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
@@ -1553,6 +1555,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 					'#type' => 'tableselect',
 					'#header' => $header,
 					'#options' => $options,
+					'#default_value' => $existing_selections;
 					'#multiple' => FALSE,
 					'#js_select' => FALSE,
 					'#empty' => ' Nothing to see here.  Move along, please.',
@@ -1602,6 +1605,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 					'#type' => 'tableselect',
 					'#header' => $header,
 					'#options' => $options,
+					'#default_value' => $existing_selections;
 					'#multiple' => TRUE,
 					'#js_select' => TRUE,
 					'#empty' => ' Nothing to see here.  Move along, please.',
@@ -1651,6 +1655,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 					'#type' => 'tableselect',
 					'#header' => $header,
 					'#options' => $options,
+					'#default_value' => $existing_selections;
 					'#multiple' => TRUE,
 					'#js_select' => TRUE,
 					'#empty' => ' Nothing to see here.  Move along, please.',
@@ -1806,26 +1811,30 @@ function theme_fetchit_table_html_form_builder($variables) {
 	return $output;
 */
 }
-function fetchit_table_html_validate($form, &$form_state) {
+function fetchit_table_html_validate($form, $form_state) {
 	$nid = $form['nid']['#value'];
-	$record_select = fetchit_get_cck_val(F_DR_RECORD_SELECT_TBL,F_DR_RECORD_SELECT_FLD,F_DR_NID_FLD,$nid);
+	//$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
+	$record_select = $form['record_select']['#value'];
 	switch ($record_select) {
 		case 0:
 			form_set_error('submit',t("fetchit setup error: invalid table type $record_select.  please contact the site administrator."));
 			return;
 		case 1: //radio buttons
-			if(!isset($form_state['values']['radios'])) {
+			$selected = array_filter($form_state['values']['table']);
+			if(!$selected) {
 				form_set_error('submit',t("Invalid selection: A selection is required before pressing the submit button."));
 				return;
 			}
-			$record_select_table = trim(fetchit_get_cck_val(F_DR_RECORD_SELECT_TABLE_TBL,F_DR_RECORD_SELECT_TABLE_FLD,F_DR_NID_FLD,$nid));
+			$record_select_table = $form['record_select_table']['#value'];
+			//$record_select_table = trim(fetchit_get_cck_val(F2_D7_CTYPE_RECTBL_TBL,F2_D7_CTYPE_RECTBL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
 			if (!strlen($record_select_table)) {
 				form_set_error('submit',t('fetchit setup error: missing selection table name.  please contact the site administrator.'));
 				return;
 			}
 			break;
 		case 2: //checkboxes for record selection
-			$record_select_table = trim(fetchit_get_cck_val(F_DR_RECORD_SELECT_TABLE_TBL,F_DR_RECORD_SELECT_TABLE_FLD,F_DR_NID_FLD,$nid));
+			$record_select_table = $form['record_select_table']['#value'];
+			//$record_select_table = trim(fetchit_get_cck_val(F2_D7_CTYPE_RECTBL_TBL,F2_D7_CTYPE_RECTBL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
 			if (!strlen($record_select_table)) {
 				form_set_error('submit',t('fetchit setup error: missing selection table name.  please contact the site administrator.'));
 				return;
@@ -1847,12 +1856,14 @@ function fetchit_table_html_validate($form, &$form_state) {
 	/*
 	 * required for all cases (1,2,3)
 	 */
-	$key_field = trim(fetchit_get_cck_val(F_DR_CONTENT_KEYFLD_TBL,F_DR_CONTENT_KEYFLD_FLD,F_DR_NID_FLD,$nid));
+	$key_field = $form['key_field']['#value'];
+	//$key_field = trim(fetchit_get_cck_val(F_DR_CONTENT_KEYFLD_TBL,F_DR_CONTENT_KEYFLD_FLD,F_DR_NID_FLD,$nid));
 	if (!strlen($key_field)) {
 		form_set_error('submit',t('fetchit setup error: missing selection key field name.  please contact the site administrator.'));
 		return;
 	}
 	$field_count = $form['field_count']['#value'];
+	//$field_count = $form['field_count']['#value'];
 	if (!($field_count)) {
 		form_set_error('submit',t('fetchit setup error: selection table has no fields.  please contact the site administrator.'));
 		return;
@@ -1869,7 +1880,8 @@ function fetchit_table_html_validate($form, &$form_state) {
 }
 function fetchit_table_html_submit($form, &$form_state) {
 	$nid = $form['nid']['#value'];
-	$record_select = fetchit_get_cck_val(F_DR_RECORD_SELECT_TBL,F_DR_RECORD_SELECT_FLD,F_DR_NID_FLD,$nid);
+	$record_select = $form['record_select']['#value'];
+	//$record_select = fetchit_get_cck_val(F_DR_RECORD_SELECT_TBL,F_DR_RECORD_SELECT_FLD,F_DR_NID_FLD,$nid);
 	//$record_select_table = trim(fetchit_get_cck_val(F_DR_RECORD_SELECT_TABLE_TBL,F_DR_RECORD_SELECT_TABLE_FLD,F_DR_NID_FLD,$nid));
 	//$user_uid_field = trim(fetchit_get_cck_val(F_DR_CONTENT_UID_TBL,F_DR_CONTENT_UID_FLD,F_DR_NID_FLD,$nid));
 	//$key_field = trim(fetchit_get_cck_val(F_DR_CONTENT_KEYFLD_TBL,F_DR_CONTENT_KEYFLD_FLD,F_DR_NID_FLD,$nid));
@@ -1885,9 +1897,10 @@ function fetchit_table_html_submit($form, &$form_state) {
 			if ($key_field_ndx) {
 				$db_type = $form['db_type']['#value'];
 				$db_handle = $form['db_handle']['#value'];
-				$selected_radio_option = $form_state['values']['radios'];
+				$selected_radio_option = array_filter($form_state['values']['table']);
 				if ($selected_radio_option) {
-					$key_field_val = $form['data'][$selected_radio_option-1][$key_field_ndx-1]['#value'];
+					// now the D7 tableselect actually returns the key field value
+					$key_field_val = $selected_radio_option;
 					$result = fetchit_set_existing_selection_nid ($db_handle,$db_type,$nid,$key_field_val);
 					drupal_set_message(t("Selection saved."),'status');
 				} else {
@@ -1902,13 +1915,9 @@ function fetchit_table_html_submit($form, &$form_state) {
 			if ($key_field_ndx) {
 				$db_type = $form['db_type']['#value'];
 				$db_handle = $form['db_handle']['#value'];
-				$selected_checkbox_options = array_filter($form_state['values']['checkboxes']);
-				$key_field_vals = array();
-				$saved_record_count = 0;
-				foreach ($selected_checkbox_options as $selected_checkbox_option) {
-					$key_field_vals[] = $form['data'][$selected_checkbox_option-1][$key_field_ndx-1]['#value'];
-					$saved_record_count++;
-				}
+				$selected_checkbox_options = array_filter($form_state['values']['table']);
+				// now the D7 tableselect returns the key field value
+				$key_field_vals = $selected_checkbox_options;
 				$result = fetchit_set_existing_selection_nid ($db_handle,$db_type,$nid,$key_field_vals);
 				if ($saved_record_count) {
 					drupal_set_message(t("Selections ($saved_record_count) saved."),'status');
@@ -1924,13 +1933,8 @@ function fetchit_table_html_submit($form, &$form_state) {
 			if ($key_field_ndx) {
 				$db_type = $form['db_type']['#value'];
 				$db_handle = $form['db_handle']['#value'];
-				$selected_checkbox_options = array_filter($form_state['values']['checkboxes']);
-				$key_field_vals = array();
-				$saved_record_count = 0;
-				foreach ($selected_checkbox_options as $selected_checkbox_option) {
-					$key_field_vals[] = $form['data'][$selected_checkbox_option-1][$key_field_ndx-1]['#value'];
-					$saved_record_count++;
-				}
+				$selected_checkbox_options = array_filter($form_state['values']['table']);
+				$key_field_vals = $selected_checkbox_options;
 				$result = fetchit_set_existing_selection_nid ($db_handle,$db_type,$nid,$key_field_vals);
 				if ($saved_record_count) {
 					drupal_set_message(t("Selections ($saved_record_count) deleted."),'status');
@@ -1943,9 +1947,9 @@ function fetchit_table_html_submit($form, &$form_state) {
 			break;
 		default:
 	}
-	$mytable = F_DR_POSTQRY_TBL;
-	$myfield = F_DR_POSTQRY_FLD;
-	$postqry = fetchit_get_cck_val($mytable,$myfield,F_DR_NID_FLD,$nid);
+	$mytable = F2_D7_CTYPE_POSTFN_TBL;
+	$myfield = F2_D7_CTYPE_POSTFN_FLD;
+	$postqry = fetchit_get_cck_val($mytable,$myfield,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
 	if (strlen(trim($postqry))) {
 		if (strtolower(substr($postqry,0,4)) == 'php.') {
 			$thefunction = substr($postqry,4); 
@@ -1956,9 +1960,9 @@ function fetchit_table_html_submit($form, &$form_state) {
 			$result = fetchit_run_query($err,$db_type,$db_handle,$postqry);
 		}
 	}
-	$mytable = F_DR_REDIRECT_TBL;
-	$myfield = F_DR_REDIRECT_FLD;
-	$redirect = fetchit_get_cck_val($mytable,$myfield,F_DR_NID_FLD,$nid);
+	$mytable = F2_D7_CTYPE_REDIR_TBL;
+	$myfield = F2_D7_CTYPE_REDIR_FLD;
+	$redirect = fetchit_get_cck_val($mytable,$myfield,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
 	if (strlen(trim($redirect))) {
 		$form_state['redirect'] = $redirect; 
 	}
