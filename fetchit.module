@@ -1546,6 +1546,8 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 				}
 				$options[$options_key] = $row;
 			}
+			print_r($header);
+			print_r($options);
 			// create the HTML tableselect render array with a single select option
 			$build['table'] = array(
 					'#theme' => 'tableselect',
