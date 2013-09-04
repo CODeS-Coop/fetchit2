@@ -1582,19 +1582,7 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 		}
 	}
 	/*
-	 * now create the actual render arrays needed
-	 * the table, ofcourse, but also perhaps radio or checkboxes and submit buttons, titles, pre and post HTML markup, etc.
-	 * the contents of the table cells will be values, but also might be rendered drupal elements (controls)
-	 * since I have not figured out how to leave them as arrays and have them rendered correctly at the
-	 * end (yet?...)
-	 * 
-	 * use an array named build for the parts that will stay "unrendered"
-	 * use an array named nobuild for the parts that be rendered into HTML before leaving this function
-	 */
-	$build = array();
-	$nobuild = array();
-	/*
-	 * first create the radio/checkboxes
+	 * create the radio/checkboxes render arrays
 	 */
 	switch ($record_select) {
 		case 0:
@@ -1638,13 +1626,13 @@ function fetchit_table_html_form_builder($form,&$form_state) {
 			case 0: // nope
 				break;
 			case 1: // yes, a single radio button goes here
-				row[] = drupal_render($nobuild['radios'] [$row_ndx+1]); // does this really work?!?  too cool!
+				row[] = drupal_render($nobuild['radios'][$row_ndx+1]); // does this really work?!?  too cool!
 				break;
 			case 2: // yes, a single checkbox goes here
-				row[] = drupal_render($nobuild['checkboxes'] [$row_ndx+1]); // does this really work?!?  too cool!
+				row[] = drupal_render($nobuild['checkboxes'][$row_ndx+1]); // does this really work?!?  too cool!
 				break;
 			case 3: //yes, a single checkbox goes here
-				row[] = drupal_render($nobuild['checkboxes'] [$row_ndx+1]); // does this really work?!?  too cool!
+				row[] = drupal_render($nobuild['checkboxes'][$row_ndx+1]); // does this really work?!?  too cool!
 				break;
 			default:
 		}
