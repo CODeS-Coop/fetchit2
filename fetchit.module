@@ -1525,6 +1525,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 				$column_count = 0;
 				for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
 					$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
+					drupal_setmessage("\$row_ndx $row_ndx \$field_ndx $field_ndx \$db_value $db_value");
 					if ($field_ndx == ($uid_field_ndx-1) ) {
 						// don't do anything with this value
 					} else {
@@ -1551,7 +1552,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 					'#header' => $header,
 					'#options' => $options,
 					'#multiple' => FALSE,
-					'#js_select' => TRUE,
+					'#js_select' => FALSE,
 					'#empty' => ' Nothing to see here.  Move along, please.',
 			);
 			// now add the submit button and submit functions
