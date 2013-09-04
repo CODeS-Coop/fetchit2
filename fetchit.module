@@ -1550,7 +1550,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 			print_r($options);
 			// create the HTML tableselect render array with a single select option
 			$build['table'] = array(
-					'#theme' => 'tableselect',
+					'#type' => 'tableselect',
 					'#header' => $header,
 					'#options' => $options,
 					'#multiple' => FALSE,
@@ -1599,7 +1599,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 			}
 			// create the HTML tableselect render array with a multiple select option
 			$build['table'] = array(
-					'#theme' => 'tableselect',
+					'#type' => 'tableselect',
 					'#header' => $header,
 					'#options' => $options,
 					'#multiple' => TRUE,
@@ -1648,7 +1648,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 			}
 			// create the HTML tableselect render array with a multiple select option
 			$build['table'] = array(
-					'#theme' => 'tableselect',
+					'#type' => 'tableselect',
 					'#header' => $header,
 					'#options' => $options,
 					'#multiple' => TRUE,
@@ -1687,7 +1687,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 			}
 			// create the HTML table render array
 			$build['table'] = array(
-					'#theme' => 'table',
+					'#type' => 'table',
 					'#header' => $header,
 					'#rows' => $rows,
 			);
