@@ -1555,7 +1555,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 					'#type' => 'tableselect',
 					'#header' => $header,
 					'#options' => $options,
-					'#default_value' => $existing_selections;
+					'#default_value' => $existing_selections,
 					'#multiple' => FALSE,
 					'#js_select' => FALSE,
 					'#empty' => ' Nothing to see here.  Move along, please.',
@@ -1605,7 +1605,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 					'#type' => 'tableselect',
 					'#header' => $header,
 					'#options' => $options,
-					'#default_value' => $existing_selections;
+					'#default_value' => $existing_selections,
 					'#multiple' => TRUE,
 					'#js_select' => TRUE,
 					'#empty' => ' Nothing to see here.  Move along, please.',
@@ -1655,7 +1655,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 					'#type' => 'tableselect',
 					'#header' => $header,
 					'#options' => $options,
-					'#default_value' => $existing_selections;
+					'#default_value' => $existing_selections,
 					'#multiple' => TRUE,
 					'#js_select' => TRUE,
 					'#empty' => ' Nothing to see here.  Move along, please.',
