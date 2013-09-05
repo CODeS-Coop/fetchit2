@@ -252,10 +252,10 @@ function fetchit_menu() {
 				}
 				//drupal_set_message(t('instance enabled value = ').$instanceenabled,'Warning');
 				if ($instanceenabled == 1) { // it is page content
-					drupal_set_message(t('inserted into table ').$pagecontenttable,'Warning');
-					drupal_set_message(F_DR_PAGE_CONTENT_PAGE_FLD.' '.$page_counter,'Warning');
-					drupal_set_message(F_DR_PAGE_CONTENT_TYPE_FLD.' '.$fcti,'Warning');
-					drupal_set_message(F_DR_PAGE_CONTENT_NID_FLD.' '.$instancenid,'Warning');
+					//drupal_set_message(t('inserted into table ').$pagecontenttable,'Warning');
+					//drupal_set_message(F_DR_PAGE_CONTENT_PAGE_FLD.' '.$page_counter,'Warning');
+					//drupal_set_message(F_DR_PAGE_CONTENT_TYPE_FLD.' '.$fcti,'Warning');
+					//drupal_set_message(F_DR_PAGE_CONTENT_NID_FLD.' '.$instancenid,'Warning');
 					//insert record into page content table
 					$ndx = db_insert($pagecontenttable)
 					->fields(array(
@@ -265,21 +265,12 @@ function fetchit_menu() {
 					->execute();
 					//create menu item
 					//drupal_set_message(t('table insert return = ').$ndx,'Warning');
-					/*
 					$items[$settings[F2_D7_SETTINGS_MNAME].'/query'.trim($page_counter)] = array(
 							'title' => $instancetitle,
 							'page callback' => 'fetchit_query_page',
 							'page arguments' => array(1),
 							'access arguments' => array('access fetchit pages'),
 							'weight' => $page_counter,
-					*/
-					$items[$settings[F2_D7_SETTINGS_MNAME].'/newform'.trim($page_counter)] = array(
-							'title' => $instancetitle,
-							'page callback' => 'drupal_get_form',
-							'page arguments' => array('newform'.trim($page_counter),$page_counter),
-							'access callback' => TRUE,
-							'type' => MENU_NORMAL_ITEM,
-					);
 					++$page_counter;
 				}
 			}
