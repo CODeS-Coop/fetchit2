@@ -1567,7 +1567,8 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 					'#type' => 'submit',
 					'#value' => t('Save'),
 			);			
-			$build['submit']['#validate'] = array('fetchit_1_validate');
+			//$build['submit']['#validate'] = array('fetchit_1_validate');
+			$build['submit']['#submit'] = array('fetchit_1_submit');
 			//$build['#submit'] = array('fetchit_1_submit');
 			//$build[$element_name]['#validate'] = array('fetchit_1_validate');
 			//$build[$element_name]['#submit'] = array('fetchit_1_submit');
@@ -1885,6 +1886,7 @@ function fetchit_1_validate($form, &$form_state) {
 	*/
 }
 function fetchit_1_submit($form, &$form_state) {
+	print_r($form);
 	$nid = $form['nid']['#value'];
 	$record_select = $form['record_select']['#value'];
 	//$record_select = fetchit_get_cck_val(F_DR_RECORD_SELECT_TBL,F_DR_RECORD_SELECT_FLD,F_DR_NID_FLD,$nid);
