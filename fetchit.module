@@ -3047,7 +3047,7 @@ function getFetchitErrorMsg ($err) {
 /*
  * Implementation of hook_theme(). 
  */
-function fetchit_theme() {
+//function fetchit_theme() {
 	/* this was the drupal 6 way...
 	return array(
 		'fetchit_table_html_form_builder' => array(
@@ -3066,6 +3066,7 @@ function fetchit_theme() {
 	/*
 	 * this is the drupal 7 way...still not working for me!
 	 */
+	/*
 	return array(
 		'fetchit_table_html_form_builder' => array(
 				'render element' => 'form',
@@ -3081,6 +3082,7 @@ function fetchit_theme() {
 		),
 	);
 }
+*/
 function pg_object_to_html_table($pg_object) {
 	// create an array where each item will be a db table row object converted to an array
 	$table_row_arrays = array();
