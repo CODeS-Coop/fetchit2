@@ -1560,19 +1560,21 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 					'#js_select' => FALSE,
 					'#empty' => ' Nothing to see here.  Move along, please.',
 			);
-			// now add the submit button and submit functions
+			// now add the actions buttons
 			if (!strlen(trim($submit_label))) $submit_label="Submit";
+			$build['actions'] = array('#type' => 'actions');
 			$element_name = "submit_$nid";
-			$build[$element_name] = array(
+			$build['actions']['submit'] = array(
 					'#type' => 'submit',
-					'#value' => t($submit_label),
-					'#validate' => array('fetchit_1_validate'),
+					'#value' => t('Save'),
+					'#weight' => 5,
+					//'#validate' => array('fetchit_1_validate'),
 					'#submit' => array('fetchit_1_submit'),
-			);
-			$build['#validate'] = array('fetchit_1_validate');
-			$build['#submit'] = array('fetchit_1_submit');
-			$build[$element_name]['#validate'] = array('fetchit_1_validate');
-			$build[$element_name]['#submit'] = array('fetchit_1_submit');
+			);			
+			//$build['#validate'] = array('fetchit_1_validate');
+			//$build['#submit'] = array('fetchit_1_submit');
+			//$build[$element_name]['#validate'] = array('fetchit_1_validate');
+			//$build[$element_name]['#submit'] = array('fetchit_1_submit');
 			break;
 		case 2: // multiple row selection via checkboxes
 			// create the HTML tableselect header and options
