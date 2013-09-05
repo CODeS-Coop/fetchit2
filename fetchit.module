@@ -1383,7 +1383,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 	/*
 	 *  declare the render array
 	 */
-	$build = array();
+	//$form = array();
 	/*
 	 * get the extra arg, nid, passed into the form builder function
 	 * and stored in the form_state array
@@ -1391,7 +1391,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 	 * this is a convenient way to pass args to the form validate and submit functions
 	 */
 	$nid = $form_state['build_info']['args'][0];
-	$build['nid'] = array('#type' => 'value','#value' => $nid);
+	$form['nid'] = array('#type' => 'value','#value' => $nid);
 	/*
 	 * create the form fieldset
 	 */
@@ -1421,19 +1421,19 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 	*/
 	// get database type
 	if($db_type = fetchit_get_db_type($err,$nid)) {
-		$build['db_type'] = array('#type' => 'value','#value' => $db_type);
+		$form['db_type'] = array('#type' => 'value','#value' => $db_type);
 	} else {
 		$err = 1;
 		drupal_set_message("An error occurred when accessing the database type. Error number $err :".getFetchitErrorMsg($err));
-		return $build;
+		return $form;
 	}
 	// get database handle
 	if ($db_handle = fetchit_get_db_handle($err,$nid)) {
-		$build['db_handle'] = array('#type' => 'value','#value' => $db_handle);
+		$form['db_handle'] = array('#type' => 'value','#value' => $db_handle);
 	} else {
 		drupal_set_message("An error occurred when creating the database connection.");
 		if ($err) drupal_set_message("Error number $err :".getFetchitErrorMsg($err));
-		return $build;
+		return $form;
 	}
 	/*
 	 * run the pre query
@@ -1459,27 +1459,27 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 	 * need to add more error checking here, watching for nulls
 	 */
 	if(strlen(trim($view_name = fetchit_get_cck_val(F2_D7_CTYPE_VIEWNM_TBL,F2_D7_CTYPE_VIEWNM_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
-		$build['view_name'] = array('#type' => 'value','#value' => $view_name);
+		$form['view_name'] = array('#type' => 'value','#value' => $view_name);
 	} else {
 		$err=8;
 		drupal_set_message("An error occurred when accessing the table/view name. Error number $err :".getFetchitErrorMsg($err));
-		return $build;
+		return $form;
 	}
 	$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
-	$build['record_select'] = array('#type' => 'value','#value' => $record_select);
+	$form['record_select'] = array('#type' => 'value','#value' => $record_select);
 	$record_select_table = trim(fetchit_get_cck_val(F2_D7_CTYPE_RECTBL_TBL,F2_D7_CTYPE_RECTBL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
-	$build['record_select_table'] = array('#type' => 'value','#value' => $record_select_table);
+	$form['record_select_table'] = array('#type' => 'value','#value' => $record_select_table);
 	$user_uid_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_UIDFLD_TBL,F2_D7_CTYPE_UIDFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
-	$build['user_uid_field'] = array('#type' => 'value','#value' => $user_uid_field);
+	$form['user_uid_field'] = array('#type' => 'value','#value' => $user_uid_field);
 	$key_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_KEYFLD_TBL,F2_D7_CTYPE_KEYFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
-	$build['key_field'] = array('#type' => 'value','#value' => $key_field);
+	$form['key_field'] = array('#type' => 'value','#value' => $key_field);
 	$submit_label = trim(fetchit_get_cck_val(F2_D7_CTYPE_SUBLBL_TBL,F2_D7_CTYPE_SUBLBL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
-	$build['submit_label'] = array('#type' => 'value','#value' => $submit_label);
+	$form['submit_label'] = array('#type' => 'value','#value' => $submit_label);
 	$db_data_object = fetchit_get_data_object($err,$db_type,$db_handle,$view_name,$user_uid_field);
 	$field_count = fetchit_get_field_count($err,$db_type,$db_data_object);
-	$build['field_count'] = array('#type' => 'value','#value' => $field_count);
+	$form['field_count'] = array('#type' => 'value','#value' => $field_count);
 	$row_count = fetchit_get_row_count($err,$db_type,$db_data_object);
-	$build['row_count'] = array('#type' => 'value','#value' => $row_count);
+	$form['row_count'] = array('#type' => 'value','#value' => $row_count);
 	$field_names = array();
 	$field_names = fetchit_get_field_names($err,$db_type,$db_data_object);
 	$field_types = array();
@@ -1505,12 +1505,12 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 		if ( $field_names[$field_ndx] == $user_uid_field ) {
 			// save it as a 1-based field index but do not create an output table column
 			$uid_field_ndx = $field_ndx + 1;
-			$build['uid_field_ndx'] = array('#type' => 'value','#value' => $uid_field_ndx);
+			$form['uid_field_ndx'] = array('#type' => 'value','#value' => $uid_field_ndx);
 		}
 		if ( $field_names[$field_ndx] == $key_field ) {
 			// save it as a 1-based field index but do not create an output table column
 			$key_field_ndx = $field_ndx + 1;
-			$build['key_field_ndx'] = array('#type' => 'value','#value' => $key_field_ndx);
+			$form['key_field_ndx'] = array('#type' => 'value','#value' => $key_field_ndx);
 		}
 	}
 	/*
@@ -1551,7 +1551,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 			//print_r($header);
 			//print_r($options);
 			// create the HTML tableselect render array with a single select option
-			$build['table'] = array(
+			$form['table'] = array(
 					'#type' => 'tableselect',
 					'#header' => $header,
 					'#options' => $options,
@@ -1561,14 +1561,14 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 					'#empty' => ' Nothing to see here.  Move along, please.',
 			);
 			// now add the actions buttons
-			if (!strlen(trim($submit_label))) $submit_label="Submit";
-			$element_name = "submit_$nid";
-			$build['submit'] = array(
+			//if (!strlen(trim($submit_label))) $submit_label="Submit";
+			//$element_name = "submit_$nid";
+			$form['submit'] = array(
 					'#type' => 'submit',
 					'#value' => t('Save'),
 			);			
 			//$build['submit']['#validate'] = array('fetchit_1_validate');
-			$build['submit']['#submit'] = array('fetchit_1_submit');
+			//$build['submit']['#submit'] = array('fetchit_1_submit');
 			//$build['#submit'] = array('fetchit_1_submit');
 			//$build[$element_name]['#validate'] = array('fetchit_1_validate');
 			//$build[$element_name]['#submit'] = array('fetchit_1_submit');
@@ -1604,7 +1604,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 				$options[$options_key] = $row;
 			}
 			// create the HTML tableselect render array with a multiple select option
-			$build['table'] = array(
+			$form['table'] = array(
 					'#type' => 'tableselect',
 					'#header' => $header,
 					'#options' => $options,
@@ -1616,14 +1616,14 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 			// now add the submit button and submit functions
 			if (!strlen(trim($submit_label))) $submit_label="Submit";
 			$element_name = "submit_$nid";
-			$build[$element_name] = array(
+			$form[$element_name] = array(
 					'#type' => 'submit',
 					'#value' => t($submit_label),
 			);
-			$build[$element_name]['#validate'][] = 'fetchit_table_html_validate';
-			$build[$element_name]['#submit'][] = 'fetchit_table_html_submit';
-			$build['#validate'][] = 'fetchit_table_html_validate';
-			$build['#submit'][] = 'fetchit_table_html_submit';
+			//$form[$element_name]['#validate'][] = 'fetchit_table_html_validate';
+			//$form[$element_name]['#submit'][] = 'fetchit_table_html_submit';
+			//$form['#validate'][] = 'fetchit_table_html_validate';
+			//$form['#submit'][] = 'fetchit_table_html_submit';
 			break;
 		case 3: // multiple row DELETION via checkboxes
 			// create the HTML tableselect header and options
@@ -1656,7 +1656,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 				$options[$options_key] = $row;
 			}
 			// create the HTML tableselect render array with a multiple select option
-			$build['table'] = array(
+			$form['table'] = array(
 					'#type' => 'tableselect',
 					'#header' => $header,
 					'#options' => $options,
@@ -1668,14 +1668,14 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 			// now add the submit button and submit functions
 			if (!strlen(trim($submit_label))) $submit_label="Delete";
 			$element_name = "submit_$nid";
-			$build[$element_name] = array(
+			$form[$element_name] = array(
 					'#type' => 'submit',
 					'#value' => t($submit_label),
 			);
-			$build[$element_name]['#validate'][] = 'fetchit_table_html_validate';
-			$build[$element_name]['#submit'][] = 'fetchit_table_html_submit';
-			$build['#validate'][] = 'fetchit_table_html_validate';
-			$build['#submit'][] = 'fetchit_table_html_submit';
+			//$form[$element_name]['#validate'][] = 'fetchit_table_html_validate';
+			//$form[$element_name]['#submit'][] = 'fetchit_table_html_submit';
+			//$form['#validate'][] = 'fetchit_table_html_validate';
+			//$form['#submit'][] = 'fetchit_table_html_submit';
 			break;
 		case 0: // no record selection
 		default:
@@ -1698,7 +1698,7 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 				$rows[] = $row;
 			}
 			// create the HTML table render array
-			$build['table'] = array(
+			$form['table'] = array(
 					'#type' => 'table',
 					'#header' => $header,
 					'#rows' => $rows,
@@ -1740,7 +1740,10 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 				}
 
 	 */
-	return $build;
+	return $form;
+}
+function fetchit_table_html_form_builder_submit($form, &$form_state) {
+	drupal_set_message('<pre>'.print_r($form,1).'</pre>');
 }
 /*
  * theme the html table form
@@ -1886,7 +1889,6 @@ function fetchit_1_validate($form, &$form_state) {
 	*/
 }
 function fetchit_1_submit($form, &$form_state) {
-	print_r($form);
 	$nid = $form['nid']['#value'];
 	$record_select = $form['record_select']['#value'];
 	//$record_select = fetchit_get_cck_val(F_DR_RECORD_SELECT_TBL,F_DR_RECORD_SELECT_FLD,F_DR_NID_FLD,$nid);
