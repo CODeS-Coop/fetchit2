@@ -276,7 +276,7 @@ function fetchit_menu() {
 					$items[$settings[F2_D7_SETTINGS_MNAME].'/newform'.trim($page_counter)] = array(
 							'title' => $instancetitle,
 							'page callback' => 'drupal_get_form',
-							'page arguments' => array('fetchit_form'.$page_counter),
+							'page arguments' => array('newform'.trim($page_counter),$page_counter),
 							'access callback' => TRUE,
 							'type' => MENU_NORMAL_ITEM,
 					);
