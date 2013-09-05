@@ -1761,7 +1761,6 @@ function theme_fetchit_table_html_form_builder($variables) {
 	$output .= drupal_render_children($form);
 	return $output;
 }
-*/
 function fetchit_table_html_form_builder_validate($form, &$form_state) {
 	$nid = $form['nid']['#value'];
 	//$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
