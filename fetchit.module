@@ -271,6 +271,7 @@ function fetchit_menu() {
 							'page arguments' => array(1),
 							'access arguments' => array('access fetchit pages'),
 							'weight' => $page_counter,
+					);
 					++$page_counter;
 				}
 			}
