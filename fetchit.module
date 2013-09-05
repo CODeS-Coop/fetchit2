@@ -130,7 +130,7 @@ function fetchit_menu() {
 	foreach ($result1 as $row1) {
 		// get the nid of the fetchit content type content type record
 		$typenid = $row1->$d7returnfieldname;
-		drupal_set_message(t('the nid of the fetchit content type node subtype = ').$typenid,'Warning');
+		//drupal_set_message(t('the nid of the fetchit content type node subtype = ').$typenid,'Warning');
 		/*
 		 * get the fetchit content type content type index value for this nid
 		 * this index value is a key into a table of possible fetchit content types
@@ -154,7 +154,7 @@ function fetchit_menu() {
 		foreach ($result2 as $row2) {
 			$fetchit_contenttype_index = $row2->$d7returnfieldname;
 		}
-		drupal_set_message(t('the type index of the fetchit content type node subtype = ').$fetchit_contenttype_index,'Warning');
+		//drupal_set_message(t('the type index of the fetchit content type node subtype = ').$fetchit_contenttype_index,'Warning');
 		/*
 		 * get the fetchit content type content type enabled value
 		 */
@@ -177,7 +177,7 @@ function fetchit_menu() {
 		foreach ($result3 as $row3) {
 			$fetchit_contenttype_enabled = $row3->$d7returnfieldname;
 		}
-		drupal_set_message(t('the enabled value of the fetchit content type node subtype = ').$fetchit_contenttype_enabled,'Warning');
+		//drupal_set_message(t('the enabled value of the fetchit content type node subtype = ').$fetchit_contenttype_enabled,'Warning');
 		/*
 		 * now save the enabled value and the nid value in hash tables
 		 * overwriting if we found one of these already and the new nid is higher
@@ -194,7 +194,7 @@ function fetchit_menu() {
 		}
 		++$counter;
 	}
-	drupal_set_message(t('number of fetchit content type node subtype records = ').$counter,'Warning');
+	//drupal_set_message(t('number of fetchit content type node subtype records = ').$counter,'Warning');
 	/*
 	 * the hash tables should now have ONE entry for each fetchit content type
 	 * 
@@ -232,9 +232,9 @@ function fetchit_menu() {
 				$instancenid = $row4->$fieldname;
 				$fieldname = F2_D7_NODE_TITL_FLDNAME;
 				$instancetitle = $row4->$fieldname;
-				drupal_set_message(t('nid of instance ').$page_counter.t(' of fetchit type ').$fcti.'('.$d7conditionvalue.') = '.$instancenid,'Warning');
-				drupal_set_message(t('title of instance ').$page_counter.t(' of fetchit type ').$fcti.'('.$d7conditionvalue.') = '.$instancetitle,'Warning');
-				drupal_set_message(t('bundle name = ').getFetchitTypeBundleName($fcti),'Warning');
+				//drupal_set_message(t('nid of instance ').$page_counter.t(' of fetchit type ').$fcti.'('.$d7conditionvalue.') = '.$instancenid,'Warning');
+				//drupal_set_message(t('title of instance ').$page_counter.t(' of fetchit type ').$fcti.'('.$d7conditionvalue.') = '.$instancetitle,'Warning');
+				//drupal_set_message(t('bundle name = ').getFetchitTypeBundleName($fcti),'Warning');
 				// get the content type instance enabled value (same field used in all types)
 				$d7tablename = F2_D7_CTYPE_ENABLE_TBL; // 'field_data_field_fetchit2_content_enabled';
 				$d7condition1fieldname = F2_D7_FIELD_SUBTYPE_FLDNAME; //'bundle';
@@ -250,7 +250,7 @@ function fetchit_menu() {
 				foreach ($result5 as $row5) {
 					$instanceenabled = $row5->$d7returnfieldname;
 				}
-				drupal_set_message(t('instance enabled value = ').$instanceenabled,'Warning');
+				//drupal_set_message(t('instance enabled value = ').$instanceenabled,'Warning');
 				if ($instanceenabled == 1) { // it is page content
 					drupal_set_message(t('inserted into table ').$pagecontenttable,'Warning');
 					drupal_set_message(F_DR_PAGE_CONTENT_PAGE_FLD.' '.$page_counter,'Warning');
@@ -264,13 +264,21 @@ function fetchit_menu() {
 							F_DR_PAGE_CONTENT_NID_FLD => $instancenid,))
 					->execute();
 					//create menu item
-					drupal_set_message(t('table insert return = ').$ndx,'Warning');
+					//drupal_set_message(t('table insert return = ').$ndx,'Warning');
+					/*
 					$items[$settings[F2_D7_SETTINGS_MNAME].'/query'.trim($page_counter)] = array(
 							'title' => $instancetitle,
 							'page callback' => 'fetchit_query_page',
 							'page arguments' => array(1),
 							'access arguments' => array('access fetchit pages'),
 							'weight' => $page_counter,
+					*/
+					$items[$settings[F2_D7_SETTINGS_MNAME].'/newform'.trim($page_counter)] = array(
+							'title' => $instancetitle,
+							'page callback' => 'drupal_get_form',
+							'page arguments' => array('fetchit_form'.$page_counter),
+							'access callback' => TRUE,
+							'type' => MENU_NORMAL_ITEM,
 					);
 					++$page_counter;
 				}
@@ -734,8 +742,8 @@ function getFetchitContent($type, $nid, $dest) {
 		switch ($type) {
 			case F_DR_TYPE_HTML_TABLE_NDX: //html table
 				//$output .= "blahblahblah a table goes here blahblahblah";
-				//$output .= drupal_render_children(drupal_get_form('fetchit_table_html_form_'.$nid,$nid));
-				$output .= drupal_get_form('fetchit_table_html_form_'.$nid,$nid);
+				$output .= drupal_render_children(drupal_get_form('fetchit_table_html_form_'.$nid,$nid));
+				//$output .= drupal_get_form('fetchit_table_html_form_'.$nid,$nid);
 				//$output .= drupal_get_form('fetchit_table_html_test_form_builder',$nid);
 				break;
 			case F_DR_TYPE_GVIZ_NDX: //gviz
@@ -772,6 +780,12 @@ function getFetchitContent($type, $nid, $dest) {
  */
 function fetchit_forms($form_id, $args) {
 	$forms=array();
+	if (strpos($form_id, 'fetchit_form_') !== FALSE) {
+		$forms[$form_id] = array(
+			'callback' => 'fetchit_form_builder',
+			'callback arguments' => array($form_id, $args,),
+    	);
+	}
 	if (strpos($form_id, 'fetchit_table_html_form_') !== FALSE) {
 		$forms[$form_id] = array(
 			'callback' => 'fetchit_table_html_form_builder',
@@ -810,6 +824,418 @@ function fetchit_forms($form_id, $args) {
 		);
 	}
 	return $forms;
+}
+function fetchit_form_builder($form, &$form_state) {
+	/*
+	 * define the html table form
+	* either use the table form element or the new d7 tableselect form element
+	*
+	* some discussion of this HTML table and tableselect form design
+	*
+	* the new d7 tableselect element will automagically create the first column when needed
+	* so almost all my d6 code here could be gutted out.
+	*
+	* if a drupal user id field is specified, it is never displayed, regardless of the record selection value
+	*   but it is saved in the render array
+	*
+	* if a key field is specified, it is never displayed, regardless of the record selection value
+	*   but it is saved in the render array
+	*   AND ALSO:
+	*     if record selection IS enabled, then it also is used as the key in the options[] array
+	*   so if you want to see the key field in the table, put it in the view twice
+	*     with two different field names, and specify one as the key for fetchit
+	*
+	* details of the record select and key field cases to handle
+	*  - record selecton not enabled and no key field given
+	*      all fields are displayed in a plain html table element
+	*  - record selecton not enabled and key field given
+	*      all fields EXCEPT key field are displayed in a plain html table element
+	*  - record selecton enabled and no key field given
+	*      all fields are displayed in a html tableselect element
+	*      the options array index key is just a 1-based row index
+	*      this is NOT a meaningful case, since the saved selection value will be a 1-based row index
+	*      the saved selection table must have an integer field named "row_index"
+	*  - record selecton enabled and key field given
+	*      all fields EXCEPT key field are displayed in a html tableselect element
+	*      the options array index key is the specified key field
+	*      this is the normal case
+	*      the saved selection table must have a field with the key field name (same type of course!)
+	*
+	*  if record selection is enabled
+	*    but selection table is not specified,
+	*    then nothing will happen when the submit button is pressed
+	*/
+	/*
+	 *  declare the render array
+	*/
+	//$form = array();
+	/*
+	 * get the extra arg, nid, passed into the form builder function
+	* and stored in the form_state array
+	* put it in the render array as a non-displayed value
+	* this is a convenient way to pass args to the form validate and submit functions
+	*/
+	$nid = $form_state['build_info']['args'][0];
+	$form['nid'] = array('#type' => 'value','#value' => $nid);
+	/*
+	 * create the form fieldset
+	*/
+	/*
+	 $fieldset_name = F_DR_HTML_BASENAME.$nid;
+	$form['fieldset_name'] = array('#type' => 'value','#value' => $fieldset_name);
+	$mytable = F_DR_CONTENT_TITLE_TBL;
+	$myfield = F_DR_CONTENT_TITLE_FLD;
+	$title = fetchit_get_cck_val($mytable,$myfield,F_DR_NID_FLD,$nid);
+	$mytable = F_DR_CONTENT_DESC_TBL;
+	$myfield = F_DR_CONTENT_DESC_FLD;
+	$desc = fetchit_get_cck_val($mytable,$myfield,F_DR_NID_FLD,$nid);
+	$mytable = F_DR_CONTENT_CLLPSBL_TBL;
+	$myfield = F_DR_CONTENT_CLLPSBL_FLD;
+	$cllpsbl = fetchit_get_cck_val($mytable,$myfield,F_DR_NID_FLD,$nid);
+	$mytable = F_DR_CONTENT_CLLPSD_TBL;
+	$myfield = F_DR_CONTENT_CLLPSD_FLD;
+	$cllpsd = fetchit_get_cck_val($mytable,$myfield,F_DR_NID_FLD,$nid);
+	$form = array();
+	$form[$fieldset_name] = array(
+			'#title' => t($title),
+			'#type' => 'fieldset',
+			'#description' => t($desc),
+			'#collapsible' => TRUE,
+			'#collapsed' => FALSE,
+	);
+	*/
+	// get database type
+	if($db_type = fetchit_get_db_type($err,$nid)) {
+		$form['db_type'] = array('#type' => 'value','#value' => $db_type);
+	} else {
+		$err = 1;
+		drupal_set_message("An error occurred when accessing the database type. Error number $err :".getFetchitErrorMsg($err));
+		return $form;
+	}
+	// get database handle
+	if ($db_handle = fetchit_get_db_handle($err,$nid)) {
+		$form['db_handle'] = array('#type' => 'value','#value' => $db_handle);
+	} else {
+		drupal_set_message("An error occurred when creating the database connection.");
+		if ($err) drupal_set_message("Error number $err :".getFetchitErrorMsg($err));
+		return $form;
+	}
+	/*
+	 * run the pre query
+	*/
+	$preqry = fetchit_get_preqry($err,$nid);
+	if (strlen(trim($preqry))) {
+		if (strtolower(substr($preqry,0,4)) == 'php.') {
+			$thefunction = substr($preqry,4);
+			global $user;
+			$user_uid = (int) $user->uid;
+			$result = $thefunction($user_uid);
+		} else {
+			$result = fetchit_run_query($err,$db_type,$db_handle,$preqry);
+		}
+	}
+	/*
+	 * for now ...do not theme this form
+	*/
+	$form['#theme'] = 'fetchit_form_builder';
+	/*
+	 * get the source data view name, field count, field names, field types, etc.
+	* save it in non displayed form render array values
+	* need to add more error checking here, watching for nulls
+	*/
+	if(strlen(trim($view_name = fetchit_get_cck_val(F2_D7_CTYPE_VIEWNM_TBL,F2_D7_CTYPE_VIEWNM_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid)))) {
+		$form['view_name'] = array('#type' => 'value','#value' => $view_name);
+	} else {
+		$err=8;
+		drupal_set_message("An error occurred when accessing the table/view name. Error number $err :".getFetchitErrorMsg($err));
+		return $form;
+	}
+	$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
+	$form['record_select'] = array('#type' => 'value','#value' => $record_select);
+	$record_select_table = trim(fetchit_get_cck_val(F2_D7_CTYPE_RECTBL_TBL,F2_D7_CTYPE_RECTBL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
+	$form['record_select_table'] = array('#type' => 'value','#value' => $record_select_table);
+	$user_uid_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_UIDFLD_TBL,F2_D7_CTYPE_UIDFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
+	$form['user_uid_field'] = array('#type' => 'value','#value' => $user_uid_field);
+	$key_field = trim(fetchit_get_cck_val(F2_D7_CTYPE_KEYFLD_TBL,F2_D7_CTYPE_KEYFLD_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
+	$form['key_field'] = array('#type' => 'value','#value' => $key_field);
+	$submit_label = trim(fetchit_get_cck_val(F2_D7_CTYPE_SUBLBL_TBL,F2_D7_CTYPE_SUBLBL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid));
+	$form['submit_label'] = array('#type' => 'value','#value' => $submit_label);
+	$db_data_object = fetchit_get_data_object($err,$db_type,$db_handle,$view_name,$user_uid_field);
+	$field_count = fetchit_get_field_count($err,$db_type,$db_data_object);
+	$form['field_count'] = array('#type' => 'value','#value' => $field_count);
+	$row_count = fetchit_get_row_count($err,$db_type,$db_data_object);
+	$form['row_count'] = array('#type' => 'value','#value' => $row_count);
+	$field_names = array();
+	$field_names = fetchit_get_field_names($err,$db_type,$db_data_object);
+	$field_types = array();
+	$field_types = fetchit_get_field_types($err,$db_type,$db_data_object);
+	/*
+	 * existing record selections use the key field and a separate table containing selected key(s)
+	* could be a single value or an array of values
+	*
+	* skip implementing this for now ... until after testing is done
+	*/
+	$existing_selections = fetchit_get_existing_selection_nid($db_handle,$db_type,$nid);
+	/*
+	 * loop through the fields and determine if they are either a source data key field or a drupal user id field
+	* these are not displayed in the table or tableselect element
+	* the key field values will become the options[] array keys used in record selection,
+	*   and the drupal user id field is used in queries.
+	* note there is data in the CCK tables that can be queried later too
+	*   as long as the nid is known
+	*/
+	$uid_field_ndx = 0;
+	$key_field_ndx = 0;
+	for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) { // loop over the source table fields
+		if ( $field_names[$field_ndx] == $user_uid_field ) {
+			// save it as a 1-based field index but do not create an output table column
+			$uid_field_ndx = $field_ndx + 1;
+			$form['uid_field_ndx'] = array('#type' => 'value','#value' => $uid_field_ndx);
+		}
+		if ( $field_names[$field_ndx] == $key_field ) {
+			// save it as a 1-based field index but do not create an output table column
+			$key_field_ndx = $field_ndx + 1;
+			$form['key_field_ndx'] = array('#type' => 'value','#value' => $key_field_ndx);
+		}
+	}
+	/*
+	 * create the render arrays for each case
+	*/
+	switch ($record_select) {
+		case 1: // single row selection via radio buttons
+			// create the HTML tableselect header and options
+			$header = array();
+			$options = array();
+			for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
+				$row = array();
+				$options_key = null;
+				$column_count = 0;
+				for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
+					$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
+					//drupal_set_message("\$row_ndx $row_ndx \$field_ndx $field_ndx \$db_value $db_value");
+					if ($field_ndx == ($uid_field_ndx-1) ) {
+						// don't do anything with this value
+					} else {
+						if ($field_ndx == ($key_field_ndx-1)) {
+							// use this as the key for the options array
+							$options_key = $db_value;
+						} else {
+							if ($row_ndx == 0) {
+								$header['column'.$column_count] = $field_names[$field_ndx];
+							}
+							$row['column'.$column_count] = $db_value;
+							++$column_count;
+						}
+					}
+				}
+				if (is_null($options_key)) { // selection enabled but no key field given - shame on you, user!!
+					$options_key = $row_ndx;
+				}
+				$options[$options_key] = $row;
+			}
+			//print_r($header);
+			//print_r($options);
+			// create the HTML tableselect render array with a single select option
+			$form['table'] = array(
+					'#type' => 'tableselect',
+					'#header' => $header,
+					'#options' => $options,
+					'#default_value' => $existing_selections,
+					'#multiple' => FALSE,
+					'#js_select' => FALSE,
+					'#empty' => ' Nothing to see here.  Move along, please.',
+			);
+			// now add the actions buttons
+			//if (!strlen(trim($submit_label))) $submit_label="Submit";
+			//$element_name = "submit_$nid";
+			$form['submit'] = array(
+					'#type' => 'submit',
+					'#value' => t('Save'),
+			);
+			//$build['submit']['#validate'] = array('fetchit_1_validate');
+			//$build['submit']['#submit'] = array('fetchit_1_submit');
+			//$build['#submit'] = array('fetchit_1_submit');
+			//$build[$element_name]['#validate'] = array('fetchit_1_validate');
+			//$build[$element_name]['#submit'] = array('fetchit_1_submit');
+			break;
+		case 2: // multiple row selection via checkboxes
+			// create the HTML tableselect header and options
+			$header = array();
+			$options = array();
+			for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
+				$row = array();
+				$options_key = null;
+				$column_count = 0;
+				for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
+					$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
+					if ($field_ndx == ($uid_field_ndx-1) ) {
+						// don't do anything with this value
+					} else {
+						if ($field_ndx == ($key_field_ndx-1)) {
+							// use this as the key for the options array
+							$options_key = $db_value;
+						} else {
+							if ($row_ndx == 0) {
+								$header['column'.$column_count] = $field_names[$field_ndx];
+							}
+							$row['column'.$column_count] = $db_value;
+							++$column_count;
+						}
+					}
+				}
+				if (is_null($options_key)) { // selection enabled but no key field given - shame on you, user!!
+					$options_key = $row_ndx;
+				}
+				$options[$options_key] = $row;
+			}
+			// create the HTML tableselect render array with a multiple select option
+			$form['table'] = array(
+					'#type' => 'tableselect',
+					'#header' => $header,
+					'#options' => $options,
+					'#default_value' => $existing_selections,
+					'#multiple' => TRUE,
+					'#js_select' => TRUE,
+					'#empty' => ' Nothing to see here.  Move along, please.',
+			);
+			// now add the submit button and submit functions
+			if (!strlen(trim($submit_label))) $submit_label="Submit";
+			$element_name = "submit_$nid";
+			$form[$element_name] = array(
+					'#type' => 'submit',
+					'#value' => t($submit_label),
+			);
+			//$form[$element_name]['#validate'][] = 'fetchit_table_html_validate';
+			//$form[$element_name]['#submit'][] = 'fetchit_table_html_submit';
+			//$form['#validate'][] = 'fetchit_table_html_validate';
+			//$form['#submit'][] = 'fetchit_table_html_submit';
+			break;
+		case 3: // multiple row DELETION via checkboxes
+			// create the HTML tableselect header and options
+			$header = array();
+			$options = array();
+			for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
+				$row = array();
+				$options_key = null;
+				$column_count = 0;
+				for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
+					$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
+					if ($field_ndx == ($uid_field_ndx-1) ) {
+						// don't do anything with this value
+					} else {
+						if ($field_ndx == ($key_field_ndx-1)) {
+							// use this as the key for the options array
+							$options_key = $db_value;
+						} else {
+							if ($row_ndx == 0) {
+								$header['column'.$column_count] = $field_names[$field_ndx];
+							}
+							$row['column'.$column_count] = $db_value;
+							++$column_count;
+						}
+					}
+				}
+				if (is_null($options_key)) { // selection enabled but no key field given - shame on you, user!!
+					$options_key = $row_ndx;
+				}
+				$options[$options_key] = $row;
+			}
+			// create the HTML tableselect render array with a multiple select option
+			$form['table'] = array(
+					'#type' => 'tableselect',
+					'#header' => $header,
+					'#options' => $options,
+					'#default_value' => $existing_selections,
+					'#multiple' => TRUE,
+					'#js_select' => TRUE,
+					'#empty' => ' Nothing to see here.  Move along, please.',
+			);
+			// now add the submit button and submit functions
+			if (!strlen(trim($submit_label))) $submit_label="Delete";
+			$element_name = "submit_$nid";
+			$form[$element_name] = array(
+					'#type' => 'submit',
+					'#value' => t($submit_label),
+			);
+			//$form[$element_name]['#validate'][] = 'fetchit_table_html_validate';
+			//$form[$element_name]['#submit'][] = 'fetchit_table_html_submit';
+			//$form['#validate'][] = 'fetchit_table_html_validate';
+			//$form['#submit'][] = 'fetchit_table_html_submit';
+			break;
+		case 0: // no record selection
+		default:
+			// create the simple HTML table header and rows
+			$header = array();
+			$rows = array();
+			for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
+				$row = array();
+				for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
+					if ($field_ndx != ($uid_field_ndx-1) ) {
+						if ($field_ndx != ($key_field_ndx-1)) {
+							if ($row_ndx == 0) {
+								$header[] = $field_names[$field_ndx];
+							}
+							$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
+							$row[] = $db_value;
+						}
+					}
+				}
+				$rows[] = $row;
+			}
+			// create the HTML table render array
+			$form['table'] = array(
+					'#type' => 'table',
+					'#header' => $header,
+					'#rows' => $rows,
+			);
+	}
+	/*
+	 * put this somewhere eventually
+	*/
+	/*
+	 * since this is the key field,
+	* $existing_selection / $existing_selections[] (values are key field values)
+	* are converted to $default_value / $default_values[] (values are 1-based row indices)
+	*/
+	/*
+	 switch ($record_select) {
+	case 0: // no selection, no default necessary
+	break;
+	case 1: // single selection, only one default value
+	for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
+	$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
+	if ($db_value == $existing_selections) {
+	$default_value = $row_ndx + 1;
+	}
+	}
+	break;
+	case 2: // multiple selection, multiple default values
+	for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
+	$db_value = fetchit_get_data($err,$db_type,$db_data_object,$row_ndx,$field_ndx);
+	foreach($existing_selections as $existing_selection) {
+	if ($db_value == $existing_selection) {
+	$default_values[] = $row_ndx + 1;
+	}
+	}
+	}
+	break;
+	case 3: // multiple deletion, the defaults are none selected
+	break;
+	default:
+	}
+
+	*/
+	return $form;
+}
+/*
+ * theme the html table form
+*/
+function theme_fetchit_form_builder($variables) {
+	$form = $variables['form'];
+	$nid = $form['nid']['#value'];
+	drupal_set_message("theme_fetchit_table_html_form_builder.  hi, jim.  the nid is $nid");
+	$output = drupal_render_children($form);
+	return $output;
 }
 function getFetchitDBObjectLocal($db_type,$view_name,$field_list,$user_uid_field,$onerow) {
 	if(strlen($user_uid_field)) {
