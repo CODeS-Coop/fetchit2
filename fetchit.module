@@ -1340,6 +1340,7 @@ function fetchit_set_existing_selection_nid (&$db_handle,&$db_type,$nid,$val) {
 		}
 	}
 }
+//function fetchit_table_html_form_builder($form, &$form_state) {
 function fetchit_table_html_form_builder($form, &$form_state) {
 /*
  * define the html table form
@@ -1451,9 +1452,9 @@ function fetchit_table_html_form_builder($form, &$form_state) {
 		}
 	}
 	/*
-	 * for now ...do not theme this form
+	 * theme this form
 	 */
-	//$build['#theme'] = 'fetchit_table_html_form_builder';
+	$form['#theme'] = 'fetchit_table_html_form_builder';
 	/*
 	 * get the source data view name, field count, field names, field types, etc.
 	 * save it in non displayed form render array values
@@ -1752,80 +1753,16 @@ function fetchit_table_html_form_builder_submit($form, &$form_state) {
 /*
  * theme the html table form
  */
-	/*
 function theme_fetchit_table_html_form_builder($variables) {
 	$form = $variables['form'];
 	$nid = $form['nid']['#value'];
+	$output = null;
 	drupal_set_message("theme_fetchit_table_html_form_builder.  hi, jim.  the nid is $nid");
-	$output = drupal_render_children($form);
-	return $output;
-	//define table header
-    //$fieldset_name = $form['fieldset_name']['#value'];
-	$nid = $form['nid']['#value'];
-	$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
-	$field_count = $form['field_count']['#value'];
-    $row_count = $form['row_count']['#value'];
-	$header = array();
-	switch ($record_select) {
-		case 0:
-			break;
-		case 1:
-			$header[] = 'Select:';
-			break;
-		case 2:
-			$header[] = 'Select:';
-			break;
-		case 3:
-			$header[] = 'Select:';
-			break;
-		default:
-	}
-	for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
-		if($form['data'][0][$field_ndx]['#type'] == 'markup') {
-			$header[] = $form['field_names'][$field_ndx]['#value'];
-		}
-	}
-	switch ($record_select) {
-		case 0:
-			break;
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		default:
-	}
-	$rows = array();
-	for ($row_ndx = 0; $row_ndx < $row_count; $row_ndx++) {
-		$row = array();
-		switch ($record_select) {
-			case 0:
-				break;
-			case 1:
-				$row[] = drupal_render($form['radios'][$row_ndx+1]);
-				break;
-			case 2:
-				$row[] = drupal_render($form['checkboxes'][$row_ndx+1]);
-				break;
-			case 3:
-				$row[] = drupal_render($form['checkboxes'][$row_ndx+1]);
-				break;
-			default:
-		}
-		for ($field_ndx = 0; $field_ndx < $field_count; $field_ndx++) {
-			if($form['data'][$row_ndx][$field_ndx]['#type'] == 'markup') {
-				$row[] = drupal_render($form['data'][$row_ndx][$field_ndx]);
-			}
-		}
-		$rows[] = $row;
-	}
-    $output .= theme('table', $header, $rows);
-	$output .= drupal_render($form);
+	$output .= drupal_render_children($form);
 	return $output;
 }
 */
-function fetchit_1_validate($form, &$form_state) {
+function fetchit_table_html_form_builder_validate($form, &$form_state) {
 	$nid = $form['nid']['#value'];
 	//$record_select = fetchit_get_cck_val(F2_D7_CTYPE_RECSEL_TBL,F2_D7_CTYPE_RECSEL_FLD,F2_D7_FIELD_TYPEID_FLDNAME,$nid);
 	$record_select = $form['record_select']['#value'];
@@ -1892,7 +1829,7 @@ function fetchit_1_validate($form, &$form_state) {
 	}
 	*/
 }
-function fetchit_1_submit($form, &$form_state) {
+function fetchit_table_html_form_builder_submit($form, &$form_state) {
 	$nid = $form['nid']['#value'];
 	$record_select = $form['record_select']['#value'];
 	//$record_select = fetchit_get_cck_val(F_DR_RECORD_SELECT_TBL,F_DR_RECORD_SELECT_FLD,F_DR_NID_FLD,$nid);
